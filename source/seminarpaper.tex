@@ -252,6 +252,8 @@ a4paper,     %% defines the paper size: a4paper (default), a5paper, letterpaper,
 %%% footer - right
 % \ofoot[]{}
 
+\newcommand\me[1]{ [* {\textbf ME:} #1 *]}
+\newcommand\mw[1]{ [* {\textbf MW:} #1 *]}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -290,7 +292,12 @@ a4paper,     %% defines the paper size: a4paper (default), a5paper, letterpaper,
 %%% structure: \section \subsection \subsubsection \paragraph \subparagraph
 %%%
 \section{Introduction}
-Nothing yet.
+Supervised learning is the task of inferring knowledge from a fully labeled training data. In contrast, unsupervised learning is the task of inferring knowledge from an unlabeled dataset. The common ground of supervised and unsupervised learning, is the task of inferring knowledge from a small amount of labeled data and a huge amount of unlabeled training data; i.e., \emph{semi-supervised learning}. In other words, semi-supervised learning is making use of that small amount of data (i.e., supervised learning) to do unsupervised learning considerably more accurate.
+\par \emph{Active learning} is a special case of semi-supervised learning in which the labeled data is incrementally provided by a continuous interaction between the learner and an \emph{Oracle}. The oracle can be a user, a system, or a teacher that provides a certain level of insight to supervise the learner by letting it to actively query for labels of unknown data. When the oracle is a system, actively querying it only means the learner is iteratively providing the system with input alphabet and asking for the output alphabet. 
+\par This method is commonly used to learn models of reactive systems by actively providing them with external events (i.e., inputs) and observe how they react to them (i.e., outputs). Though, sometimes active learning can be as expensive as manual labeling since not all runs of all systems are inexpensive or repeatable; to exemplify, consider a scenario in which an input sequence triggers a safety critical behaviour of the system (e.g. self-termination).
+\par \me{here goes a brief history about the L$^*$ algorithm of Angluin (2 or 3 paragraphs).}
+\par Although L$^*$ is a quite useful automata learning approach, there are also issues with it; first of which is while using L$^*$ the learner either learns the correct system or nothing. Next issue with L$^*$ is actually stated earlier, that is, when it is impossible for some systems to perform some queries for various reasons (e.g. not being cost-effective, safety critical behaviour, expensive overheads, and etc.). Because of these reasons and many others that we may not know beforehand, passive learning (i.e., unsupervised learning) is used to learn the somewhat correct model of the system under learn. AALERGIA\cite{Mao.} is an interesting approach to learn stochastic automata from a data-set of traces of a system.
+\par \me{here you have to reword parts of introduction of AALERGIA \cite{Mao.} that are relate to the incentives of devising such method; two or three paragraphs suffice.}
 
 %%% Section PRELIMINARY
 \newpage
@@ -748,4 +755,4 @@ Nothing yet.
 %% emerge-set-combine-versions-template: "%a\n%b\n"
 %% End:
 %% vim:foldmethod=marker
-% this is a test by Masoud
+% this is a test by Masoud 
