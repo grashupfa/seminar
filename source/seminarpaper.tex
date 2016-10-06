@@ -1,22 +1,3 @@
-%%% File-Information {{{
-%%% Filename: seminarpaper.tex
-%%% Purpose: lab report, technical report, project report
-%%% Time-stamp: <2004-06-30 18:19:32 mp>
-%%% Authors: The LaTeX@TUG-Team [http://latex.tugraz.at/]:
-%%%          Karl Voit (vk), Michael Prokop (mp), Stefan Sollerer (ss)
-%%% History:
-%%%   20050914 (ss) correction of "backref=true" to "backref" due to hyperref documentation
-%%%   20040630 (mp) added comments to foldmethod at end of file
-%%%   20040625 (vk,ss) initial version
-%%%
-%%% Notes:
-%%%
-%%%
-%%%
-%%% }}}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% main document {{{
-
 \documentclass[
 a4paper,     %% defines the paper size: a4paper (default), a5paper, letterpaper, ...
 % landscape,   %% sets the orientation to landscape
@@ -36,66 +17,19 @@ a4paper,     %% defines the paper size: a4paper (default), a5paper, letterpaper,
 ]{scrartcl}  %% article, see KOMA documentation (scrguide.dvi)
 
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%
-%%% packages
-%%%
-
-%%%
-%%% encoding and language set
-%%%
-
-%%% ngerman: language set to new-german
-%\usepackage{ngerman}
-
-%%% babel: language set (can cause some conflicts with package ngerman)
-%%%        use it only for multi-language documents or non-german ones
-%\usepackage[ngerman]{babel}
-
-%%% inputenc: coding of german special characters
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
 \usepackage[latin1]{inputenc}
-
-%%% fontenc, ae, aecompl: coding of characters in PDF documents
 \usepackage[T1]{fontenc}
 \usepackage{ae,aecompl}
-
-%%%
-%%% technical packages
-%%%
-
-%%% amsmath, amssymb, amstext: support for mathematics
 \usepackage{amsmath,amssymb,amstext}
 \usepackage{algorithm}
-
 \usepackage{algpseudocode}
 \usepackage{float}
-%%% psfrag: replace PostScript fonts
 \usepackage{psfrag}
-
-%%% listings: include programming code
 \usepackage{listings}
-
-%%% units: technical units
-%\usepackage{units}
-
-%%%
-%%% layout
-%%%
-
-%%% scrpage2: KOMA heading and footer
-%%% Note: if you don't use this package, please remove
-%%%       \pagestyle{scrheadings} and corresponding settings
-%%%       below too.
 \usepackage[automark]{scrpage2}
-
 \usepackage{smartdiagram}
-
-
-%%%
-%%% PDF
-%%%
-
 \usepackage{ifpdf}
 
 \makeatletter
@@ -293,7 +227,7 @@ a4paper,     %% defines the paper size: a4paper (default), a5paper, letterpaper,
 %%%
 \section{Introduction}
 Supervised learning is the task of inferring knowledge from a fully labeled training data. In contrast, unsupervised learning is the task of inferring knowledge from an unlabeled dataset. The common ground of supervised and unsupervised learning, is the task of inferring knowledge from a small amount of labeled data and a huge amount of unlabeled training data; i.e., \emph{semi-supervised learning}. In other words, semi-supervised learning is making use of that small amount of data (i.e., supervised learning) to do unsupervised learning considerably more accurate.
-\par \emph{Active learning} is a special case of semi-supervised learning in which the labeled data is incrementally provided by a continuous interaction between the learner and an \emph{Oracle}. The oracle can be a user, a system, or a teacher that provides a certain level of insight to supervise the learner by letting it to actively query for labels of unknown data. When the oracle is a system, actively querying it only means the learner is iteratively providing the system with input alphabet and asking for the output alphabet. 
+\par \emph{Active learning} is a special case of semi-supervised learning in which the labeled data is incrementally provided by a continuous interaction between the learner and an \emph{Oracle}. The oracle can be a user, a system, or a teacher that provides a certain level of insight to supervise the learner by letting it to actively query for labels of unknown data. When the oracle is a system, actively querying it only means the learner is iteratively providing the system with input alphabet and asking for the output alphabet.
 \par This method is commonly used to learn models of reactive systems by actively providing them with external events (i.e., inputs) and observe how they react to them (i.e., outputs). Though, sometimes active learning can be as expensive as manual labeling since not all runs of all systems are inexpensive or repeatable; to exemplify, consider a scenario in which an input sequence triggers a safety critical behaviour of the system (e.g. self-termination).
 \par \me{here goes a brief history about the L$^*$ algorithm of Angluin (2 or 3 paragraphs).}
 \par Although L$^*$ is a quite useful automata learning approach, there are also issues with it; first of which is while using L$^*$ the learner either learns the correct system or nothing. Next issue with L$^*$ is actually stated earlier, that is, when it is impossible for some systems to perform some queries for various reasons (e.g. not being cost-effective, safety critical behaviour, expensive overheads, and etc.). Because of these reasons and many others that we may not know beforehand, passive learning (i.e., unsupervised learning) is used to learn the somewhat correct model of the system under learn. AALERGIA\cite{Mao.} is an interesting approach to learn stochastic automata from a data-set of traces of a system.
@@ -301,9 +235,44 @@ Supervised learning is the task of inferring knowledge from a fully labeled trai
 
 %%% Section PRELIMINARY
 \newpage
-\section{Preliminiary}
+\section{Preliminaries}
+\subsection{Markov Models}
+\subsubsection{Markov Decision Procedure}
+\subsubsection{Deterministic Labeled Markov chain}
+\subsubsection{Discrete-time Markov chain}
+\subsection{Prism Model Checker}
+\subsubsection{Probabilistic Linear Temporal Logic}
+\me{That's on ME.}
+\subsubsection{Dice Programs}
+\me{(1) description, (2) graphical model top to bottom in tikz. (3) the prism code and its description. (4) what are we going to do with it? prism queries!}
+\begin{figure}
+  \centering
+  \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,semithick]
+  \tikzstyle{state}=[draw,circle,transform shape]
+  \node[initial,state] (A)                    {$q_a$};
+  \node[state]         (B) [above right of=A] {$q_b$};
+  \node[state]         (D) [below right of=A] {$q_d$};
+  \node[state]         (C) [below right of=B] {$q_c$};
+  \node[state]         (E) [below of=D]       {$q_e$};
+  \path [transform shape]
+        (A) edge              node {0,1,L} (B)
+            edge              node {1,1,R} (C)
+        (B) edge [loop above] node {1,1,L} (B)
+            edge              node {0,1,L} (C)
+        (C) edge              node {0,1,L} (D)
+            edge [bend left]  node {1,0,R} (E)
+        (D) edge [loop below] node {1,1,R} (D)
+            edge              node {0,1,R} (A)
+        (E) edge [bend left]  node {1,0,R} (A);
+\end{tikzpicture}
+\caption{caption}\label{fig:something}
+\end{figure}
 
+\subsubsection{Herman's Self-Stabilisation Algorithm}
+\me{(1) describe the problem; (2) how they handled the problem with prism model checker? (3) what are the findings? and be specific that we are going to use this case study from this point onward for the learning algorithm; otherwise we state that we are referring to the dice programs.}
 \subsection{AALERGIA}
+\me{(1) Who is responsible for ALERGIA; (2) Why they implemented this tool? (3) What are the issues with the tool?}
+\me{(1) Who is responsible for AALERGIA; (2) How they addressed the issues with ALERGIA in this novel implementation? (3) Is there any room for improvement? (The answer is yes and you will refer to the PAutomataC contest + related work)}
 
 In this paper, the algorithm AALERGIA\cite{Mao.} and the provided MATLAB implementation\footnote{http://mi.cs.aau.dk/code/aalergia} are used as a starting point for our work. In order to get a better idea of the way the implementation works, we will describe it in detail and a running example for better replicability is used throughout this section. The implementation of the algorithm consists of several parts, which are depicted in the figure~\ref{fig:diaAalergia}.
 
@@ -323,10 +292,9 @@ In this paper, the algorithm AALERGIA\cite{Mao.} and the provided MATLAB impleme
 \end{figure}
 
 \subsubsection{Training Data}
-
-The data used to learn the Deterministic Labeled Markov Chain (DLMC) is supplied by an external *.mat file, which contains MATLAB formatted data: The training set and the alphabet to be used. The alphabet consists of a finite 1xN-cell array, where each column contains one letter in the alphabet. The training set consist of a finite Nx1-cell array, where each row contains sequences of symbols generated from the model, separated by commas.
-\paragraph{}
-The running example we are going to use is a self-stabilizing ring network with 3 processes.
+The data used to learn the Deterministic Labeled Markov Chain (DLMC) is supplied in the form of a comma separated values file, which contains the training set and the alphabet to be used. The alphabet consists of a finite 1$\times$N-cell array, where each column contains one letter in the alphabet. The training set consist of a finite N$\times$1-cell array, where each row contains sequences of symbols generated from the model, separated by commas.
+\paragraph{Dataset Generator} \me{we need to talk about how we are capable of generating dataset from a prism model.}
+\par The running example we are going to use is a self-stabilizing ring network with 3 processes.
 Table~\ref{table:trainingsSet} shows the beginning of the trainings set, which contains 50 Sequences in total.  In our case, each symbol in the training set represents the states in the ring at a given moment. For example, the symbol 001 shows that process 3 is in the state 1 and process 1 and 2 are in the state 0.
 
 \begin{table}[ht!]
@@ -357,12 +325,10 @@ Table~\ref{table:alphabet} shows the alphabet, which consists of 8 symbols from 
 \end{table}
 
 \subsubsection{Frequency Prefix Tree Acceptor}
-After loading the trainings set and the alphabet into the workspace, the Frequency Prefix Tree Acceptor (FPTA) is created. A deterministic frequency finite automaton (DFFA) is a tuple $A = \langle \Sigma, Q, I\textsubscript{fr}, F\textsubscript{fr}, \delta\textsubscript{fr}, \delta \rangle$ where $ \Sigma $ = the finite alphabet, $Q$ = the finite set of states, $I\textsubscript{fr}$ = the initial state frequencies, $F\textsubscript{fr}$ = the final state frequencies, $\delta\textsubscript{fr}$ = the frequency transition function and $ \delta$ = the transition function. The frequency shows how often an event in the automaton occurs.
-\paragraph{}
-Algorithm~\ref{alg:fpta} shows how the creation of the FPTA is implemented in the AALERGIA package. The code starts by sorting the trainings set and by removing double occurrences (line~\ref{fpta:sort}).
+After loading the trainings set and the alphabet into the workspace, the Frequency Prefix Tree Acceptor (FPTA) is created. A deterministic frequency finite automaton (DFFA) is a tuple $A = \langle \Sigma, Q, I\textsubscript{fr}, F\textsubscript{fr}, \delta\textsubscript{fr}, \delta \rangle$ where $ \Sigma $ = the finite alphabet, $Q$ = the finite set of states, $I\textsubscript{fr}$ = the initial state frequencies, $F\textsubscript{fr}$ = the final state frequencies, $\delta\textsubscript{fr}$ = the frequency transition function and $ \delta$ = the transition function. The frequency shows how often an event in the automaton occurs. \me{we need an example FPTA for dice programs here so the reader would depict an FPTA in his/her mind.}
+\par Algorithm~\ref{alg:fpta} shows how the creation of the FPTA is implemented in the AALERGIA package. The code starts by sorting the trainings set and by removing double occurrences (line~\ref{fpta:sort}).
 After that, a for-loop iterates through the sorted strings and splits them at each comma (line~\ref{fpta:BeginForPrefix} -~\ref{fpta:EndForPrefix}).
 This creates all the prefixes from the trainings set and adds them to the cell array named \emph{prefix}, as shown in Table~\ref{table:prefix}.
-
 \begin{table}[ht!]
 \centering
 \begin{tabular}{|l|}
@@ -464,8 +430,8 @@ The returned object DFFA (line~\ref{fpta:return}) has the following members:
       \item the initial state frequency
       \item the final state frequency
       \item the frequency transition matrix
-      \item RED (later used for merging)
-      \item BLUE (later used for merging)
+      \item RED (later used for merging) \me{be more comprehensive about RED set}
+      \item BLUE (later used for merging) \me{likewise}
    \end{itemize}
 
 Table~\ref{table:transitionMatrix} shows how the first element of the frequency transition matrix (the transition matrix) is structured. The columns represent the 8 symbols, the rows the different states. For example,  row number 2, column 1 shows the number 3. This indicates that state 2 and symbol 1 lead to state 3. The second element of the frequency transition matrix has the same dimensions as the first element and follows the same logic, but instead of transitions it contains the frequencies.
@@ -514,8 +480,8 @@ The algorithm searches through the frequency transition matrix, sums up the freq
 \subsubsection{Golden Section Search}
 
 First, we need to search for a left and right border of $\varepsilon$ in order to get a region for our golden section search. This is done by the following algorithm~\ref{alg:findregion}. In order to save space, the algorithm only explains how to find the left border of the region. The right border is found the same way, with some minor modifications. The algorithm iteratively calculates BIC-scores for the values of $\varepsilon$. For each run of the while-loop, the $\varepsilon$ is multiplied by 0.5 until a left border is found. If the new $\varepsilon$ produces a Bayesian Information Criterion(BIC)-score larger than the previous $\varepsilon$ (line~\ref{findregion:scorelarger}), it essentially means that we found a right border, but the left border is further to the left and we need to search again. If the new score is the same as the old score  (line~\ref{findregion:scorethesame}), we search again. If the value of the score doesn't change for 5 consecutive tries, we break the loop and take the last value of $\varepsilon$ as our left border. Last but not least, if the new score is smaller than the old score (line~\ref{findregion:scoresmaller}), we found the left border and can continue searching for the right border (not shown in the pseudo code).
-
-The BIC score can be used to evaluate the learned model. It creates a score that is calculated on the likelihood minus a penalty term for the model complexity. A larger BIC score (x > y) means a better score and is preferred. Further details are given at \cite{Mao.}.
+\paragraph{BIC Score} This is a measure that can be used to evaluate the learned model. It creates a score that is calculated on the likelihood minus a penalty term for the model complexity. A larger BIC score (x > y) means a better score and is preferred. Further details are given at \cite{Mao.}.
+\me{we need the formula}
 
 \begin{algorithm}[H]
 \caption{Find $\varepsilon$-region}\label{alg:findregion}
@@ -698,27 +664,27 @@ After having calculated a good $\alpha$ value, we can finally start the AALERGIA
 \end{algorithmic}
 \end{algorithm}
 
+\subsubsection{Perplexity}
 %%% Section RELATED WORK
 \newpage
 \section{Related Work}
-Nothing yet.
+\me{The contest you were looking at. write three paragraphs each of which dedicated to one of the top three approaches; cite the publications (Worst to best).}
+\me{The continue the discussion on SHIBATA and why it is winning every major contest in this field  PAutomataC 2012, CONTEST 2016.}
 
-
-\newpage
 \section{Meat}
-Nothing yet.
+\me {a case study on wireless sensory networks.}
 
 
 
 \newpage
 \section{Evaluation}
-Nothing yet.
+\me {compare the findings about the case study with real-world scenario and the knowledge of an expert in the field of wireless sensory networks.}
 
 
 
 \newpage
 \section{Conclusions}
-Nothing yet.
+\me{the approach is good; but!}
 %%%
 %%% end main document
 %%%
