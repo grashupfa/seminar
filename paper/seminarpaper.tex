@@ -1,20 +1,7 @@
 \documentclass[
-a4paper,     %% defines the paper size: a4paper (default), a5paper, letterpaper, ...
-% landscape,   %% sets the orientation to landscape
-% twoside,     %% changes to a two-page-layout (alternatively: oneside)
-% twocolumn,   %% changes to a two-column-layout
-% headsepline, %% add a horizontal line below the column title
-% footsepline, %% add a horizontal line above the page footer
-% titlepage,   %% only the titlepage (using titlepage-environment) appears on the first page (alternatively: notitlepage)
-% parskip,     %% insert an empty line between two paragraphs (alternatively: halfparskip, ...)
-% leqno,       %% equation numbers left (instead of right)
-% fleqn,       %% equation left-justified (instead of centered)
-% tablecaptionabove, %% captions of tables are above the tables (alternatively: tablecaptionbelow)
-% draft,       %% produce only a draft version (mark lines that need manual edition and don't show graphics)
-% 10pt         %% set default font size to 10 point
-% 11pt         %% set default font size to 11 point
-12pt         %% set default font size to 12 point
-]{scrartcl}  %% article, see KOMA documentation (scrguide.dvi)
+a4paper,
+12pt
+]{scrartcl}
 
 
 \usepackage{tikz}
@@ -28,6 +15,7 @@ a4paper,     %% defines the paper size: a4paper (default), a5paper, letterpaper,
 \usepackage{float}
 \usepackage{psfrag}
 \usepackage{listings}
+\usepackage{color}
 \usepackage[automark]{scrpage2}
 \usepackage{smartdiagram}
 \usepackage{ifpdf}
@@ -36,80 +24,77 @@ a4paper,     %% defines the paper size: a4paper (default), a5paper, letterpaper,
 \def\BState{\State\hskip-\ALG@thistlm}
 \makeatother
 
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 
-%%% Should be LAST usepackage-call!
-%%% For docu on that, see reference on package ``hyperref''
-\ifpdf%   (definitions for using pdflatex instead of latex)
+\lstdefinestyle{prism}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
 
-  %%% graphicx: support for graphics
+\lstdefinelanguage{Prism}
+{
+  % list of keywords
+  morekeywords={
+  bool,C,ceil,const,ctmc,double,dtmc,endinit,endmodule,endrewards, endsystem,F,false,floor,formula,G,global,I,init,int,label,max,mdp,min, module,nondeterministic,P,Pmin,Pmax,prob,probabilistic,R,rate,rewards,Rmin,Rmax,S,stochastic,system,true,U,X
+  },
+  sensitive=false, % keywords are not case-sensitive
+  morecomment=[l]{//}, % l is for line comment
+  morecomment=[s]{/*}{*/}, % s is for start and end delimiter
+  morestring=[b]" % defines that strings are enclosed in double quotes
+}
 
+\lstset{style=prism}
+
+\ifpdf
   \pdfcompresslevel=9
-
-  %%% hyperref (hyperlinks in PDF): for more options or more detailed
-  %%%          explanations, see the documentation of the hyperref-package
-  \usepackage[%
-    %%% general options
-    pdftex=true,      %% sets up hyperref for use with the pdftex program
-    %plainpages=false, %% set it to false, if pdflatex complains: ``destination with same identifier already exists''
-    %
-    %%% extension options
-    backref,      %% adds a backlink text to the end of each item in the bibliography
-    pagebackref=false, %% if true, creates backward references as a list of page numbers in the bibliography
-    colorlinks=true,   %% turn on colored links (true is better for on-screen reading, false is better for printout versions)
-    %
-    %%% PDF-specific display options
-    bookmarks=true,          %% if true, generate PDF bookmarks (requires two passes of pdflatex)
-    bookmarksopen=false,     %% if true, show all PDF bookmarks expanded
-    bookmarksnumbered=false, %% if true, add the section numbers to the bookmarks
-    %pdfstartpage={1},        %% determines, on which page the PDF file is opened
-    pdfpagemode=None         %% None, UseOutlines (=show bookmarks), UseThumbs (show thumbnails), FullScreen
+  \usepackage[
+    pdftex=true,
+    backref,
+    pagebackref=false,
+    colorlinks=true,
+    bookmarks=true,
+    bookmarksopen=false,
+    bookmarksnumbered=false,
+    pdfpagemode=None
   ]{hyperref}
-
-
-  %%% provide all graphics (also) in this format, so you don't have
-  %%% to add the file extensions to the \includegraphics-command
-  %%% and/or you don't have to distinguish between generating
-  %%% dvi/ps (through latex) and pdf (through pdflatex)
   \DeclareGraphicsExtensions{.pdf}
 
-\else %else   (definitions for using latex instead of pdflatex)
-
+\else
   \usepackage[dvips]{graphicx}
-
   \DeclareGraphicsExtensions{.eps}
-
-  \usepackage[%
-    dvips,           %% sets up hyperref for use with the dvips driver
-    colorlinks=false %% better for printout version; almost every hyperref-extension is eliminated by using dvips
+  \usepackage[
+    dvips,
+    colorlinks=false
   ]{hyperref}
 
 \fi
 
-
-%%% sets the PDF-Information options
-%%% (see fields in Acrobat Reader: ``File -> Document properties -> Summary'')
-%%% Note: this method is better than as options of the hyperref-package (options are expanded correctly)
 \hypersetup{
-  pdftitle={}, %%
-  pdfauthor={}, %%
-  pdfsubject={}, %%
-  pdfcreator={Accomplished with LaTeX2e and pdfLaTeX with hyperref-package.}, %%
-  pdfproducer={}, %%
-  pdfkeywords={} %%
+  pdftitle={},
+  pdfauthor={},
+  pdfsubject={},
+  pdfcreator={Accomplished with LaTeX2e and pdfLaTeX with hyperref-package.},
+  pdfproducer={},
+  pdfkeywords={}
 }
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%
-%%% user defined commands
-%%%
-
-%%% \mygraphics{}{}{}
-%% usage:   \mygraphics{width}{filename_without_extension}{caption}
-%% example: \mygraphics{0.7\textwidth}{rolling_grandma}{This is my grandmother on inlinescates}
-%% requires: package graphicx
-%% provides: including centered pictures/graphics with a boldfaced caption below
-%%
 \newcommand{\mygraphics}[3]{
   \begin{center}
     \includegraphics[width=#1, keepaspectratio=true]{#2} \\
@@ -117,21 +102,9 @@ a4paper,     %% defines the paper size: a4paper (default), a5paper, letterpaper,
   \end{center}
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%
-%%% define the titlepage
-%%%
-
-% \subject{}   %% subject which appears above titlehead
-% \titlehead{} %% special heading for the titlepage
-
-%%% title
 \title{Seminarpaper}
 
-%%% author(s)
 \author{Mario Wagner, 0730223}
-
-%%% date
 \date{Graz, am \today{}}
 
 % \publishers{}
@@ -139,91 +112,27 @@ a4paper,     %% defines the paper size: a4paper (default), a5paper, letterpaper,
 % \thanks{} %% use it instead of footnotes (only on titlepage)
 
 % \dedication{} %% generates a dedication-page after titlepage
-
-
-%%% uncomment following lines, if you want to:
-%%% reuse the maketitle-entries for hyperref-setup
-%\newcommand\org@maketitle{}
-%\let\org@maketitle\maketitle
-%\def\maketitle{%
-%  \hypersetup{
-%    pdftitle={\@title},
-%    pdfauthor={\@author}
-%    pdfsubject={\@subject}
-%  }%
-%  \org@maketitle
-%}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%
-%%% set heading and footer
-%%%
-
-%%% scrheadings default:
-%%%      footer - middle: page number
-%\pagestyle{scrheadings}
-
-%%% user specific
-%%% usage:
-%%% \position[heading/footer for the titlepage]{heading/footer for the rest of the document}
-
-%%% heading - left
-% \ihead[]{}
-
-%%% heading - center
-% \chead[]{}
-
-%%% heading - right
  \ohead[]{Seminar paper}
-
-%%% footer - left
-% \ifoot[]{}
-
-%%% footer - center
-% \cfoot[]{}
-
-%%% footer - right
-% \ofoot[]{}
 
 \newcommand\me[1]{ [* {\textbf ME:} #1 *]}
 \newcommand\mw[1]{ [* {\textbf MW:} #1 *]}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%
-%%% begin document
-%%%
-
 \begin{document}
 
-\pagenumbering{roman} %% small roman page numbers
-
-%%% include the title
-% \thispagestyle{empty}  %% no header/footer (only) on this page
+\pagenumbering{roman}
  \maketitle
-
-%%% start a new page and display the table of contents
- %\newpage
  \tableofcontents
-
-%%% start a new page and display the list of figures
-%\newpage
-\listoffigures
-
-%%% start a new page and display the list of tables
-% \newpage
+ \listoffigures
  \listoftables
 
-%%% display the main document on a new page
 \newpage
 
-\pagenumbering{arabic} %% normal page numbers (include it, if roman was used above)
+\pagenumbering{arabic}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%
 %%% begin main document
-%%% structure: \section \subsection \subsubsection \paragraph \subparagraph
 %%%
 \section{Introduction}
 Supervised learning is the task of inferring knowledge from a fully labeled training data. In contrast, unsupervised learning is the task of inferring knowledge from an unlabeled dataset. The common ground of supervised and unsupervised learning, is the task of inferring knowledge from a small amount of labeled data and a huge amount of unlabeled training data; i.e., \emph{semi-supervised learning}. In other words, semi-supervised learning is making use of that small amount of data (i.e., supervised learning) to do unsupervised learning considerably more accurate.
@@ -243,29 +152,77 @@ Supervised learning is the task of inferring knowledge from a fully labeled trai
 \subsection{Prism Model Checker}
 \subsubsection{Probabilistic Linear Temporal Logic}
 \me{That's on ME.}
-\subsubsection{Dice Programs}
-\me{(1) description, (2) graphical model top to bottom in tikz. (3) the prism code and its description. (4) what are we going to do with it? prism queries!}
-\begin{figure}
+\subsubsection{Dice Programs} \label{section:diceprograms}
+%\me{(1) description, (2) graphical model top to bottom in tikz. (3) the prism code and its description. (4) what are we going to do with it? prism queries!}
+The first and simpler example we are going to use is a PRISM model of a simple probabilistic algorithm, the dice model\cite{KY76}. Figure~\ref{fig:dice} shows the states and the probability of the state transitions. We start at an initial state 0 and we toss a coin at each step, giving us a 50 percent chance of transitioning to each of the two following states. The algorithm ends at the leafs of the tree, which represent the values of the dice (d1-d6).
+
+\begin{figure}[ht!]
   \centering
-  \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,semithick]
-  \tikzstyle{state}=[draw,circle,transform shape]
-  \node[initial,state] (A)                    {$q_a$};
-  \node[state]         (B) [above right of=A] {$q_b$};
-  \node[state]         (D) [below right of=A] {$q_d$};
-  \node[state]         (C) [below right of=B] {$q_c$};
-  \node[state]         (E) [below of=D]       {$q_e$};
-  \path [transform shape]
-        (A) edge              node {0,1,L} (B)
-            edge              node {1,1,R} (C)
-        (B) edge [loop above] node {1,1,L} (B)
-            edge              node {0,1,L} (C)
-        (C) edge              node {0,1,L} (D)
-            edge [bend left]  node {1,0,R} (E)
-        (D) edge [loop below] node {1,1,R} (D)
-            edge              node {0,1,R} (A)
-        (E) edge [bend left]  node {1,0,R} (A);
+\begin{tikzpicture}[level/.style={sibling distance=80mm/#1, level distance = 2cm, -latex}]
+\node [circle,draw] (0) {0}
+  child {node [circle,draw] (1) {1} 
+        child {node [circle,draw] (3) {3} 
+              child {node [circle,draw] (d1) {d1} edge from parent node[above left]{0.5}
+              }
+        edge from parent node[above left]{0.5}
+        }
+        child {node [circle,draw] (4) {4} 
+               child {node [circle,draw] (d2) {d2} edge from parent node[above left]{0.5}
+               }
+               child {node [circle,draw] (d3) {d3} edge from parent node[above right]{0.5}
+               }
+        edge from parent node[above right]{0.5}
+        }
+  edge from parent node[above left]{0.5}
+  }
+  child {node [circle,draw] (2) {2}
+          child {node [circle,draw] (5) {5}
+              child {node [circle,draw] (d4) {d4} edge from parent node[above left]{0.5}
+              }
+              child {node [circle,draw] (d5) {d5} edge from parent node[above right]{0.5}
+              }
+        edge from parent node[above left]{0.5}
+        }
+        child {node [circle,draw] (6) {6}
+               child {node [circle,draw] (d6) {d6} edge from parent node[above right]{0.5}
+        }   
+        edge from parent node[above right]{0.5}
+        }
+  edge from parent node[above right]{0.5}
+  }
+;
 \end{tikzpicture}
-\caption{caption}\label{fig:something}
+  \caption{The Dice Example}\label{fig:dice}
+\end{figure}
+
+The source code of the dice PRISM model is shown in figure~\ref{fig:dicemodel}. At the beginning, the code indicates that it is describing a discrete-time Markov chain (DTMC). The source code shows a single PRISM module called dice. The variable \textit{s}, which represents the state of the system, can take the values from 0 to 7 and is initialised with the value 0 (line~\ref{dicemodel:s}). The variable \textit{d}, which represents the value of the dice, can range from 0 to 6 and is also initialised with the value 0, meaning that the dice has no value yet (line~\ref{dicemodel:d}).
+Each line depicts a state and the probabilities of the transitions, e.g. line~\ref{dicemodel:s1} shows there is a probability of 0.5 of transitioning to state 3 or state 4 if we are currently in state 1. The model ends if a value is assigned to the dice, as there are no further transitions from that point on.
+
+\begin{figure}[ht!]
+\begin{lstlisting}[language=Prism, ,escapechar=|]
+dtmc
+
+module dice
+
+	// local state
+	s : [0..7] init 0; |\label{dicemodel:s}|
+	// value of the dice
+	d : [0..6] init 0;  |\label{dicemodel:d}|
+	
+	[] s=0 -> 0.5 : (s'=1) + 0.5 : (s'=2);
+	[] s=1 -> 0.5 : (s'=3) + 0.5 : (s'=4); |\label{dicemodel:s1}|
+	[] s=2 -> 0.5 : (s'=5) + 0.5 : (s'=6);
+	[] s=3 -> 0.5 : (s'=1) + 0.5 : (s'=7) & (d'=1);
+	[] s=4 -> 0.5 : (s'=7) & (d'=2) + 0.5 : (s'=7) & (d'=3);
+	[] s=5 -> 0.5 : (s'=7) & (d'=4) + 0.5 : (s'=7) & (d'=5);
+	[] s=6 -> 0.5 : (s'=2) + 0.5 : (s'=7) & (d'=6);
+	[] s=7 -> (s'=7);
+	
+endmodule
+
+\end{lstlisting}
+\caption{The Prism Dice Model}
+\label{fig:dicemodel}
 \end{figure}
 
 \subsubsection{Herman's Self-Stabilisation Algorithm}
@@ -325,7 +282,53 @@ Table~\ref{table:alphabet} shows the alphabet, which consists of 8 symbols from 
 \end{table}
 
 \subsubsection{Frequency Prefix Tree Acceptor}
-After loading the trainings set and the alphabet into the workspace, the Frequency Prefix Tree Acceptor (FPTA) is created. A deterministic frequency finite automaton (DFFA) is a tuple $A = \langle \Sigma, Q, I\textsubscript{fr}, F\textsubscript{fr}, \delta\textsubscript{fr}, \delta \rangle$ where $ \Sigma $ = the finite alphabet, $Q$ = the finite set of states, $I\textsubscript{fr}$ = the initial state frequencies, $F\textsubscript{fr}$ = the final state frequencies, $\delta\textsubscript{fr}$ = the frequency transition function and $ \delta$ = the transition function. The frequency shows how often an event in the automaton occurs. \me{we need an example FPTA for dice programs here so the reader would depict an FPTA in his/her mind.}
+After loading the trainings set and the alphabet into the workspace, the Frequency Prefix Tree Acceptor (FPTA) is created. A deterministic frequency finite automaton (DFFA) is a tuple $A = \langle \Sigma, Q, I\textsubscript{fr}, F\textsubscript{fr}, \delta\textsubscript{fr}, \delta \rangle$ where $ \Sigma $ = the finite alphabet, $Q$ = the finite set of states, $I\textsubscript{fr}$ = the initial state frequencies, $F\textsubscript{fr}$ = the final state frequencies, $\delta\textsubscript{fr}$ = the frequency transition function and $ \delta$ = the transition function.
+
+Figure~\ref{fig:fptadice} shows how a simplified FPTA for the in section~\ref{section:diceprograms} described dice model looks like. The sample S is a multiset of size 20. S = \{(SH,1), (SHHH,1), (SHHHD\textsubscript{1},1), (SHHD\textsubscript{1},2), (SHHD\textsubscript{1}D\textsubscript{1},1), (SHT,2), (SHTD\textsubscript{2},1), (SHTD\textsubscript{2}D\textsubscript{2},1), (SHTD\textsubscript{3},1), (ST,1), (STH,2), (STHD\textsubscript{4},1), (STHD\textsubscript{5},1), (STT,2), (STTD\textsubscript{6},2)\}. The letter H stands for heads, the letter T stands for tails and D1 - D6 stands for the different dice values. The numbers in the state indicates the number of the occurrence of the event, whereas the number on the transitions illustrates the count of all events below it.
+
+\begin{figure}[ht!]
+  \centering
+\begin{tikzpicture}[level/.style={sibling distance=80mm/#1, level distance = 2cm}]
+\node [circle,draw] (s){S}
+  child {node [circle,draw] (h) {H:1}  
+        child {node [circle,draw] (hh) {H:0}
+        child {node [circle,draw] (hhh) {H:1} 
+              child {node [circle,draw] (hhhd1) {D1:1} edge from parent node[left]{1}}
+        edge from parent node[above left]{2}
+        }
+        child {node [circle,draw] (hhd1) {D1:2} 
+              child {node [circle,draw] (hhd1d1) {D1:1} edge from parent node[left]{1}}
+        edge from parent node[above right]{3}
+        }
+        edge from parent node[above left]{5}
+        }
+        child {node [circle,draw] (ht) {T:2} 
+              child {node [circle,draw] (htd2) {D2:1} 
+                    child {node [circle,draw] (htd2d2) {D2:1} edge from parent node[left]{1}}
+              edge from parent node[above left]{2}     
+              }
+              child {node [circle,draw] (htd3) {D3:1} edge from parent node[above right]{1}}
+              edge from parent node[above right]{5}
+        }
+  edge from parent node[above left]{11}
+  }
+  child {node [circle,draw] (t) {T:1}
+         child {node [circle,draw] (th) {H:2} 
+               child {node [circle,draw] (ttd4) {D4:1} edge from parent node[above left]{1}}
+               child {node [circle,draw] (ttd5) {D5:1} edge from parent node[above right]{1}}
+         edge from parent node[above left]{4}
+         }
+         child {node [circle,draw] (tt) {T:2} 
+               child {node [circle,draw] (ttd6) {D6:2} edge from parent node[left]{2}}
+         edge from parent node[above right]{4}
+         }
+  edge from parent node[above right]{9}
+  }
+;
+\end{tikzpicture}
+  \caption{The FPTA for the DICE model}\label{fig:fptadice}
+\end{figure}
+
 \par Algorithm~\ref{alg:fpta} shows how the creation of the FPTA is implemented in the AALERGIA package. The code starts by sorting the trainings set and by removing double occurrences (line~\ref{fpta:sort}).
 After that, a for-loop iterates through the sorted strings and splits them at each comma (line~\ref{fpta:BeginForPrefix} -~\ref{fpta:EndForPrefix}).
 This creates all the prefixes from the trainings set and adds them to the cell array named \emph{prefix}, as shown in Table~\ref{table:prefix}.
@@ -685,40 +688,9 @@ After having calculated a good $\alpha$ value, we can finally start the AALERGIA
 \newpage
 \section{Conclusions}
 \me{the approach is good; but!}
-%%%
-%%% end main document
-%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\appendix  %% include it, if something (bibliography, index, ...) follows below
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%
-%%% bibliography
-%%%
-%%% available styles: abbrv, acm, alpha, apalike, ieeetr, plain, siam, unsrt
-%%%
+\appendix
  \bibliographystyle{ieeetr}
-
-%%% name of the bibliography file
  \bibliography{sources}
 
-
-
-\end{document}
-%%% }}}
-%%% END OF FILE
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Notice!
-%%% This file uses the outline-mode of emacs and the foldmethod of Vim.
-%%% Press 'zi' to unfold the file in Vim.
-%%% See ':help folding' for more information.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Local Variables:
-%% mode: outline-minor
-%% OPToutline-regexp: "%% .*"
-%% OPTeval: (hide-body)
-%% emerge-set-combine-versions-template: "%a\n%b\n"
-%% End:
-%% vim:foldmethod=marker
-% this is a test by Masoud 
+\end{document} 
