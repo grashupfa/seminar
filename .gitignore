@@ -1,0 +1,10 @@
+*.aux
+*.blg
+paper/seminarpaper.lof
+*.log
+paper/seminarpaper.out
+*.synctex
+source/Thumbs.db
+*.toc
+*.lot
+*.bbl
