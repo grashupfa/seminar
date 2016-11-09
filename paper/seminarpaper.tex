@@ -150,7 +150,7 @@ a4paper,
 %%% begin main document
 %%%
 \section{Introduction}
-Supervised learning is the task of inferring knowledge from a fully labeled training data. In contrast, unsupervised learning is the task of inferring knowledge from an unlabeled dataset. The common ground of supervised and unsupervised learning, is the task of inferring knowledge from a small amount of labeled data and a huge amount of unlabeled training data; i.e., \emph{semi-supervised learning}. In other words, semi-supervised learning is making use of that small amount of data (i.e., supervised learning) to do unsupervised learning considerably more accurate.
+Supervised learning is the task of inferring knowledge from a fully labeled training data. In contrast, unsupervised learning is the task of inferring knowledge from an unlabeled dataset. In real-world scenarios the usual case is to deal with gigantic datasets that are only partially labeled. These real-world datasets are difficult to deal with because performing supervised learning is not possible due to lack of training data, and doing unsupervised learning is not cost-effective or beneficiary considering accuracy and precision. The common ground of supervised and unsupervised learning, is the task of inferring knowledge from a small amount of labeled data and a huge amount of unlabeled training data; i.e., \emph{semi-supervised learning}. In other words, semi-supervised learning is making use of that small amount of data (i.e., supervised learning) to do unsupervised learning considerably more accurate.
 \par \emph{Active learning} is a special case of semi-supervised learning in which the labeled data is incrementally provided by a continuous interaction between the learner and an \emph{Oracle}. The oracle can be a user, a system, or a teacher that provides a certain level of insight to supervise the learner by letting it to actively query for labels of unknown data. When the oracle is a system, actively querying it only means the learner is iteratively providing the system with input alphabet and asking for the output alphabet.
 \par This method is commonly used to learn models of reactive systems by actively providing them with external events (i.e., inputs) and observe how they react to them (i.e., outputs). Though, sometimes active learning can be as expensive as manual labeling since not all runs of all systems are inexpensive or repeatable; to exemplify, consider a scenario in which an input sequence triggers a safety critical behaviour of the system (e.g. self-termination).
 \par A popular algorithm proposed by Angluin\cite{Angluin.1987} is called L$^*$. A so called \textit{Learner} efficiently learns an unknown regular set from a \textit{Teacher} by repeatedly asking questions and saving the findings in an observation table. There are two types of questions the \textit{Learner} can ask the \textit{Teacher}. First, it can ask whether a given string is a member of the unknown set (membership query) and the \textit{Teacher} replies with yes or no. Second, a conjecture can be made and the \textit{Teacher} answers if the set is correct (equivalence query). If the set is incorrect, a counterexample is provided. The \textit{Teacher} can also be substituted by a random sampling \textit{Oracle}. The outcome of the algorithm is a minimal deterministic finite automaton (DFA).
@@ -215,37 +215,64 @@ The first and simpler example we are going to use is a PRISM model of a simple p
   \centering
 \begin{tikzpicture}[level/.style={sibling distance=60mm/#1, level distance = 1.75cm, -latex}]
 \node [circle,draw] (0) {0}
-  child {node [circle,draw] (1) {1}
-        child {node [circle,draw] (3) {3}
-              child {node (d1) {\die1} edge from parent node[above left]{0.5}
-              }
+    child 
+    {
+        node [circle,draw] (1) {1}
+        child 
+        {
+            node [circle,draw] (3) {3}
+            child
+            {
+                node (d1) {\die1} edge from parent node[above left]{0.5}
+            }
+            edge from parent node[above left]{0.5}
+        }
+        child 
+        {
+            node [circle,draw] (4) {4}
+            child 
+            {
+                node (d2) {\die2} edge from parent node[above left]{0.5}
+            }
+            child 
+            {
+                node (d3) {\die3} edge from parent node[above right]{0.5}
+            }
+            edge from parent node[above right]{0.5}
+        }
         edge from parent node[above left]{0.5}
-        }
-        child {node [circle,draw] (4) {4}
-               child {node (d2) {\die2} edge from parent node[above left]{0.5}
-               }
-               child {node (d3) {\die3} edge from parent node[above right]{0.5}
-               }
-        edge from parent node[above right]{0.5}
-        }
-  edge from parent node[above left]{0.5}
   }
-  child {node [circle,draw] (2) {2}
-          child {node [circle,draw] (5) {5}
-              child {node (d4) {\die4} edge from parent node[above left]{0.5}
-              }
-              child {node (d5) {\die5} edge from parent node[above right]{0.5}
-              }
+  child 
+  {
+    node [circle,draw] (2) {2}
+    child 
+    {
+        node [circle,draw] (5) {5}
+        child 
+        {
+            node (d4) {\die4} edge from parent node[above left]{0.5}
+        }
+        child 
+        {
+            node (d5) {\die5} edge from parent node[above right]{0.5}
+        }
         edge from parent node[above left]{0.5}
-        }
-        child {node [circle,draw] (6) {6}
-               child {node (d6) {\die6} edge from parent node[above right]{0.5}
+    }
+    child 
+    {
+        node [circle,draw] (6) {6}
+        child 
+        {
+            node (d6) {\die6} edge from parent node[above right]{0.5}
         }
         edge from parent node[above right]{0.5}
-        }
-  edge from parent node[above right]{0.5}
-  }
-;
+    }
+    edge from parent node[above right]{0.5}
+  };
+  \path [>=latex',->,line join=bevel, auto, midway, label]
+    (3) edge [bend right] node [below right] {$0.5$} (1)
+    (6) edge [bend left] node {$0.5$} (2);
+    
 \end{tikzpicture}
   \caption{The Dice Example}\label{fig:dice}
 \end{figure}
