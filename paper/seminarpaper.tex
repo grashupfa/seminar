@@ -121,6 +121,14 @@ a4paper,
 \newcommand\me[1]{ [* {\textbf ME:} #1 *]}
 \newcommand\mw[1]{ [* {\textbf MW:} #1 *]}
 
+% LTL operators
+\newcommand\true {\operatorname {\mathbf{true}}}
+\newcommand\X{ \operatorname {\mathbf{X}}}
+\newcommand\G{ \operatorname {\mathbf{G}}}
+\newcommand\F{ \operatorname {\mathbf{F}}}
+\newcommand\U{ \operatorname {\mathbf{U}}}
+\newcommand\Prob[1]{ \operatorname {\mathcal{P}_{#1}}}
+
 \font\domino=domino
 \def\die#1{{\domino#1}}
 
@@ -155,13 +163,52 @@ Supervised learning is the task of inferring knowledge from a fully labeled trai
 \newpage
 \section{Preliminaries}
 \subsection{Markov Models}
+Markov model is a stochastic model capable of depicting randomly changing systems assuming Markov property. Markov property states future state is only dependant on the current state and not on the events that occurred before. There are different types of Markovian models each of which is used in different scenarios.
+\par Markov chain is the simplest variation of Markovian models used to model autonomous systems whose states are fully observable. Here we study Deterministic Labeled Markov Chain (DLMC) and Discrete-Time Markov Chain (DTMC). Meanwhile Markov Decision Process is another variation of Markovian models, used to model non-autonomous (controlled) systems whose states are fully observable, which we study in this section.
+\subsubsection{Deterministic Labeled Markov Chain}
+A labeled Markov chain is a tuple $M=(Q,AP,\pi,\tau,L)$ where $Q$ is a finite non-empty set of states, $AP$ a finite non-empty set of atomic propositions, $\Sigma=2^{AP}$ is a finite alphabet, $L:Q\to \Sigma$ is a state labeling function, and $\pi$ is the initial probability distribution as follows
+\begin{equation*}
+  \pi:Q\to [0,1]~\text{s.t.}~\sum_{q\in Q} \pi(q)=1,
+\end{equation*}
+and $\tau$ is the transition probability function as follows:
+\begin{equation*}
+  \tau: Q\times Q \to [0,1]~\text{s.t.}~\forall q \in Q \cdot \sum_{q'\in Q}\tau(q,q')=1.
+\end{equation*}
+A labeled Markov chain is deterministic (DLMC) if (1) there exist an initial state $q_0\in Q$ such that $\pi(q_0)=1$, and (2) for all $\sigma \in \Sigma$ and from all states $q \in Q$ there exists at most one destination state labeled with $\sigma$ that is $\tau(q,q')>0$ and $L(q')=\sigma$.
+\subsubsection{Discrete-Time Markov Chain}
+\par A Discrete-Time Markov Chain (DTMC) is a tuple $M=(Q,q_0,AP,\tau,L)$ where $Q$ is a finite non-empty set of states, $q_0\in Q$ is the initial state, $AP$ a finite non-empty set of atomic propositions, $\Sigma=2^{AP}$ is a finite alphabet, $L:Q\to \Sigma$ is a state labeling function, and $\tau$ is the transition probability function as follows:
+\begin{equation*}
+  \tau: Q\times Q \to [0,1]~\text{s.t.}~\forall q \in Q \cdot \sum_{q'\in Q}\tau(q,q')=1.
+\end{equation*}
+DTMC is actually representing a stochastic processes in discrete time $n \in \mathbb{N}$ as a sequence of random variables $Q={q_n}$. We refer to $q_n$ as the state of process at time $n$, with $q_0$ denoting the initial state. If the random variable $q_i$ takes values in discrete space such as integers $\mathbb{Z}$, then the we are dealing with a discrete-valued stochastic process.
 \subsubsection{Markov Decision Procedure}
-\subsubsection{Deterministic Labeled Markov chain}
-\subsubsection{Discrete-time Markov chain}
-\subsection{Prism Model Checker}
+A Markov Decision Procedure (MDP) is an extended DTMC such that it allows both probabilistic and non-deterministic behaviour. MDP is a tuple $M=(Q, q_0, AP, \tau, L)$ where $Q$ is a finite non-empty set of states, $q_0$ is the initial state, $AP$ is a finite non-empty set of atomic propositions, $\Sigma = 2^{AP}$ is a finite alphabet, $L:Q \to \Sigma$ is a state labeling function, and $\tau: Q \times AP \times Q \to [0,1]$ is the partial probabilistic transition function defined for all $q$ and $\sigma$ where $\sigma \in L(q)$.
+\subsection{PRISM Model Checker}
+Dealing with deterministic models it is easy to associate states with strings. Despite the fact that it is not a one-to-one association it is an effective lexicographical representation for not only it is possible to identify a particular state by having a string belonging to set of all strings emanates from it but it also is possible to denote an arbitrary string by a particular state.
+A path over the states $q_0, \dots, q_n$ of a state labeled deterministic Markovian model $M$ gives rise to a trace/string $s = \sigma_1, \dots, s_n$ whose probability of occurrence is defined by $\Prob{M}(s)$ as:
+\begin{equation*}
+  \Prob{M}(s) = \prod_{i=0}^{n-1}\tau(q_i,q_{i+1}),
+\end{equation*}
+Meanwhile, for non-deterministic Markovian models such as MDP it is also possible to perform Monte-Carlo simulation to estimate the probability of a trace occurrence.
+\par PRISM model checker harnesses above described approaches to verify the correctness of stochastic properties of randomly changing systems over their stochastic models. These stochastic properties can be formally formulated by Probabilistic LTL which we are going to study in the next subsection.
 \subsubsection{Probabilistic Linear Temporal Logic}
-\me{That's on ME.}
-\subsubsection{Dice Programs} \label{section:diceprograms}
+Modal and temporal properties of Markovian models are difficult to formulate because they represent randomly changing systems. Meanwhile, LTL is a modal temporal logic best suited to formally express the properties of reactive systems. In this section, we study a probability extended LTL that is suited to formulate the properties of Markovian models.
+\par Linear temporal logic over set of atomic propositions $AP$ is defined by the following syntax:
+\begin{multline*}
+  \varphi ::= \true~|~a~|~\varphi_1 \land \varphi_2~|~\neg \varphi~|~\X \varphi~|~\G \varphi~|~\F \varphi~|~\varphi_1 \U \varphi_2 \\
+  (a \in AP)
+\end{multline*}
+The syntax of Probabilistic LTL (PLTL) is defined as:
+\begin{equation*}
+  \phi ::= \Prob{\bowtie r} (\varphi)
+\end{equation*}
+where $\varphi$ is an LTL property, $\bowtie$ is a comparison operator $\{\leq, <, =, \geq, >\}$ and $r \in [0,1]$ is a confidence threshold.
+Semantic of a PLTL can be defined over a deterministic Markovian model $M$ as:
+\begin{equation*}
+  M \models \Prob{\bowtie r}(\varphi)~\text{iff}~ \Prob{M}(\varphi) \bowtie r,
+\end{equation*}
+where $\Prob{M}(\varphi)$ denotes $\Prob{M}(\{s~|~s \models \varphi \})$ meaning a string belonging to $M$ models $\varphi$.
+\subsubsection{Dice Model} \label{section:diceprograms}
 The first and simpler example we are going to use is a PRISM model of a simple probabilistic algorithm, the dice model\cite{KY76}. Figure~\ref{fig:dice} shows the states and the probability of the state transitions. We start at an initial state 0 and we toss a coin at each step, giving us a 50 percent chance of transiting to each of the two following states. The algorithm ends at the leafs of the tree, which represent the values of the dice (d1-d6).
 
 \begin{figure}[ht!]
