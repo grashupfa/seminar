@@ -21,8 +21,6 @@ a4paper,
 \usepackage{ifpdf}
 \usepackage{xcolor,colortbl}
 
-
-
 \makeatletter
 \def\BState{\State\hskip-\ALG@thistlm}
 \makeatother
@@ -123,6 +121,9 @@ a4paper,
 \newcommand\me[1]{ [* {\textbf ME:} #1 *]}
 \newcommand\mw[1]{ [* {\textbf MW:} #1 *]}
 
+\font\domino=domino
+\def\die#1{{\domino#1}}
+
 
 \begin{document}
 
@@ -165,18 +166,18 @@ The first and simpler example we are going to use is a PRISM model of a simple p
 
 \begin{figure}[ht!]
   \centering
-\begin{tikzpicture}[level/.style={sibling distance=80mm/#1, level distance = 2cm, -latex}]
+\begin{tikzpicture}[level/.style={sibling distance=60mm/#1, level distance = 1.75cm, -latex}]
 \node [circle,draw] (0) {0}
   child {node [circle,draw] (1) {1}
         child {node [circle,draw] (3) {3}
-              child {node [circle,draw] (d1) {d1} edge from parent node[above left]{0.5}
+              child {node (d1) {\die1} edge from parent node[above left]{0.5}
               }
         edge from parent node[above left]{0.5}
         }
         child {node [circle,draw] (4) {4}
-               child {node [circle,draw] (d2) {d2} edge from parent node[above left]{0.5}
+               child {node (d2) {\die2} edge from parent node[above left]{0.5}
                }
-               child {node [circle,draw] (d3) {d3} edge from parent node[above right]{0.5}
+               child {node (d3) {\die3} edge from parent node[above right]{0.5}
                }
         edge from parent node[above right]{0.5}
         }
@@ -184,14 +185,14 @@ The first and simpler example we are going to use is a PRISM model of a simple p
   }
   child {node [circle,draw] (2) {2}
           child {node [circle,draw] (5) {5}
-              child {node [circle,draw] (d4) {d4} edge from parent node[above left]{0.5}
+              child {node (d4) {\die4} edge from parent node[above left]{0.5}
               }
-              child {node [circle,draw] (d5) {d5} edge from parent node[above right]{0.5}
+              child {node (d5) {\die5} edge from parent node[above right]{0.5}
               }
         edge from parent node[above left]{0.5}
         }
         child {node [circle,draw] (6) {6}
-               child {node [circle,draw] (d6) {d6} edge from parent node[above right]{0.5}
+               child {node (d6) {\die6} edge from parent node[above right]{0.5}
         }
         edge from parent node[above right]{0.5}
         }
@@ -236,7 +237,7 @@ endmodule
 The running example we are going to use in this paper (unless explicitly stated otherwise) is a PRISM model of Herman's self-stabilising algorithm, as described in \cite{Kwiatkowska.2012}. The algorithm guarantees that the system recovers from faults in a certain amount of time. Although it is certain that the system self-stabilises eventually, it is very hard to analyse the maximum execution time, which depicts the worst case scenario in this case.
 \par Herman's algorithm works with a network of an odd number of identical processes in a ring, ordered anticlockwise. The processes work synchronously and possess a token, which is passed around the ring. The result of a random coin toss decides whether the process keeps the token or passes it on to its neighbour. If a process holds two tokens, they are eliminated. The result is a stable system, where each process has exactly one token and the tokens are passed around forever in the ring. In order to analyse the correctness and the performance of the proposed model, the authors use the tool PRISM Model Checker and invoke probabilistic model checking methods on the model.
 \par The proposed methods worked well and proved the correctness of the algorithm. Their findings on the maximum execution time showed, that having 3 tokens, spaced evenly around the ring, always produced the worst-case behaviour. It is stated that probabilistic model checking is extremely useful for checking models of this kind, because simple tools, languages and techniques are provided to model the system. Also, an exhaustive analysis can be done, as opposed to other simulation techniques such as the Monte Carlo simulation. A disadvantage is the restriction of probabilistic model checking to finite state models. Furthermore, the size of the models under analysis are limited to the amount of time and space available.
-\par The source code of the model is shown in figure~\ref{fig:hermanmodel}. In this case, seven processes are used in the ring. The step notation in line~\ref{hermanmodel:step} forces all processes to synchronise. The state of each process is depicted by a single two-valued variable (x1-x3). Initially, the value is 1 for all processes. The implementation of this model is straightforward and it is used as a data generator for the input of the AALERGIA implementation. 
+\par The source code of the model is shown in figure~\ref{fig:hermanmodel}. In this case, seven processes are used in the ring. The step notation in line~\ref{hermanmodel:step} forces all processes to synchronise. The state of each process is depicted by a single two-valued variable (x1-x3). Initially, the value is 1 for all processes. The implementation of this model is straightforward and it is used as a data generator for the input of the AALERGIA implementation.
 
 \begin{figure}[ht!]
 \begin{lstlisting}[language=Prism, ,escapechar=|]
@@ -588,7 +589,7 @@ Table~\ref{table:region} shows the values of the left and right border of $\vare
 \begin{tabular}{|l|l|l|l|l|l|l|l|l|}
 \hline
 \gray &\gray 1 & \gray 2 & \gray 3 & \gray 4 & \gray 5 & \gray 6 & \gray 7 & \gray 8 \\ \hline
-\gray 1&-840.6080 & -1.5769e+03 & -840.6080 & -840.6080 & -840.6080 & -840.6080 & -840.6080 & -840.6080 \\ \hline
+\gray 1&-840.608 & -1.5769e+03 & -840.608 & -840.608 & -840.608 & -840.608 & -840.608 & -840.608 \\ \hline
 \end{tabular}
 \caption{The BIC scores}
 \label{table:bicscores}
