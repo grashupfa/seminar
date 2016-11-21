@@ -361,7 +361,7 @@ ALERGIA\cite{Carrasco.1994} was introduced by Rafael C. Carrasco and Jose Oncina
     module x sep=3cm,
     text width=2cm,
     }
-   \smartdiagram[flow diagram:horizontal]{Training Data, Prefix Tree Acceptor, Golden Section Search, AALERGIA, DLMC}
+   \smartdiagram[flow diagram:horizontal]{Training Data, Prefix Tree Acceptor, Golden Section Search, {\tiny AALERGIA}, DLMC}
 \end{center}
     \captionof{figure}{The Flow Diagram AALERGIA}
      \label{fig:diaAalergia}
@@ -411,10 +411,10 @@ Figure~\ref{fig:fptadice} shows how a simplified FPTA for the in section~\ref{se
   \centering
 \begin{tikzpicture}[>=latex',->,line join=bevel,level/.style={sibling distance=80mm/#1, level distance = 2cm}]
 \node [circle,draw] (s){S}
-    child 
+    child
     {
         node [draw] (h) {H(1)}
-        child 
+        child
         {
             node [draw] (hh) {H(0)}
             child
@@ -457,26 +457,26 @@ Figure~\ref{fig:fptadice} shows how a simplified FPTA for the in section~\ref{se
         }
         edge from parent node[above left]{11}
     }
-    child 
+    child
     {
         node [draw] (t) {T(1)}
-        child 
+        child
         {
             node [draw] (th) {H(2)}
-            child 
+            child
             {
                 node (ttd4) {\epsdice{4}(1)} edge from parent node[above left]{1}
             }
-            child 
+            child
             {
                 node (ttd5) {\epsdice{5}(1)} edge from parent node[above right]{1}
             }
             edge from parent node[above left]{4}
         }
-        child 
+        child
         {
             node [draw] (tt) {T(2)}
-            child 
+            child
             {
                 node (ttd6) {\epsdice{6}(2)} edge from parent node[left]{2}
             }
