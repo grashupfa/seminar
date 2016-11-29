@@ -9,9 +9,10 @@ from calculate_likelihood import calculate_likelihood
 from math import log
 from golden_section_search import golden_section_search
 from AAlergia import AALERGIA
+from export_to_prism import export_to_prism
 
 #those are the variables that need to be changed
-MODELNAME = 'herman3'
+MODELNAME = 'craps'
 DELIMITER = ':'
 SYMBOL_COUNT = 640
 FLAG_TOKEN = 1
@@ -46,5 +47,7 @@ final_dffa = AALERGIA(dffa, good_e,dpfa_orig)
 LL = calculate_likelihood(cnt,unique_strs, final_dffa)
 a_size,valid = automata_size(final_dffa)
 score= LL -0.5 * a_size *(alpha_len - 1) * log(sample_size)
+
+export_to_prism(final_dffa)
 
 print('finished')
