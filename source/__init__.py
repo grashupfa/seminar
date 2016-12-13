@@ -12,7 +12,7 @@ from AAlergia import AALERGIA
 from export_to_prism import export_to_prism
 
 #those are the variables that need to be changed
-MODELNAME = 'craps'
+MODELNAME = 'channel_250_3_4_5'
 DELIMITER = ':'
 SYMBOL_COUNT = 640
 FLAG_TOKEN = 1

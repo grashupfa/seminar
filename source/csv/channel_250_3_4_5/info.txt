@@ -1,0 +1,6 @@
+data for following data:
+250 sequences
+
+Bemin=3
+Bemax=5
+Nbmax=4

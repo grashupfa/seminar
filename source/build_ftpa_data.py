@@ -23,7 +23,7 @@ def build_ftpa_data(trainingset_np, alphabets):
         seq = string_set_u_sorted[i]                
         ind = findall(seq, ',')
                     
-        for j in range(len(ind)-2, 0, -1):
+        for j in range(len(ind)-1, -1, -1):
             substr = seq[0:ind[j]+1]
             
             if not substr in prefixes[:]:             

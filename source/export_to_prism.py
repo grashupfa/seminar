@@ -29,7 +29,7 @@ def export_to_prism(dffa):
     f.write('module test \n');
     ii = mask[np.where(valid == dffa.initial_state)];
     
-    f.write('s:[1..%d] init %d;\n' % (a_size, ii+1));
+    f.write('s:[0..%d] init %d;\n' % (a_size-1, ii));
     
     for i in range(0,a_size):
         p = tran_p[i][:];
