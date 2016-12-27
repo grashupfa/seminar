@@ -21,6 +21,8 @@ a4paper,
 \usepackage{ifpdf}
 \usepackage{xcolor,colortbl}
 \usepackage{epsdice}
+\usepackage{pgfplots}
+\usepackage{pdfpages}
 
 
 \makeatletter
@@ -159,7 +161,7 @@ In the industry, model-driven development techniques are getting more and more i
 
 %\par This method is commonly used to learn models of reactive systems by actively providing them with external events (i.e., inputs) and observe how they react to them (i.e., outputs). Though, sometimes active learning can be as expensive as manual labeling since not all runs of all systems are inexpensive or repeatable; to exemplify, consider a scenario in which an input sequence triggers a safety critical behaviour of the system (e.g. self-termination).
 
-\par A popular algorithm proposed by Angluin \cite{Angluin.1987} is called L$^*$. A so called \textit{learner} efficiently learns an unknown regular set from an \textit{oracle} by repeatedly asking questions and saving the findings in an observation table. There are two types of questions the learner can ask the oracle. First, it can ask whether a given string is a member of the unknown set (i.e., membership query) to which the oracle replies with yes or no. Second, a conjecture can be made and the oracle answers if the set is correct (i.e., equivalence query). If the set is incorrect, a counterexample is provided. The oracle can also be substituted by a random sampling \textit{teacher}. The outcome of the algorithm is a minimal deterministic finite automaton (DFA).
+\par A popular algorithm proposed by Angluin \cite{Angluin.1987} is called L$^*$. A so called \textit{learner} efficiently learns an unknown regular set from an \textit{oracle} by repeatedly asking questions and saving the findings in an observation table. There are two types of questions the learner can ask the oracle. First, she can ask whether a given string is a member of the unknown set (i.e., membership query) to which the oracle replies with yes or no. Second, a conjecture can be made and the oracle answers if the set is correct (i.e., equivalence query). If the set is incorrect, a counterexample is provided. The oracle can also be substituted by a random sampling \textit{teacher}. The outcome of the algorithm is a minimal deterministic finite automaton (DFA).
 
 \par Although L$^*$ is a quite useful automata learning approach, there are also issues with it; first of which is while using L$^*$ the learner either learns the correct system or nothing. Next issue with L$^*$ is actually stated earlier, that is, when it is impossible for some systems to perform some queries for various reasons (e.g. not being cost-effective, safety critical behaviour, expensive overheads, randomly changing behaviour, and etc.). Moreover, there are some difficulties when trying to learn deterministic model of an unknown system; one of which is its randomly changing behaviours. For these reasons, sometimes it is better to construct the stochastic or nondeterministic model of the system under learn by sufficiently observing system's behaviour. Similarly, passive learning (i.e., unsupervised learning) is recently used to learn the somewhat correct model of the system under learn out of its execution traces that represent the actual behaviour of the system.
 
@@ -218,7 +220,7 @@ Semantic of a PLTL can be defined over a deterministic Markovian model $M$ as:
 \end{equation*}
 where $\Prob{M}(\varphi)$ denotes $\Prob{M}(\{s~|~s \models \varphi \})$ meaning a string belonging to $M$ models $\varphi$.
 \subsubsection{Dice Model} \label{section:diceprograms}
-The first and simpler example we are going to use is a PRISM model of a simple probabilistic algorithm, the dice model\cite{KY76}. Figure~\ref{fig:dice} shows the states and the probability of the state transitions. We start at an initial state 0 and we toss a coin at each step, giving us a 50 percent chance of transiting to each of the two following states. The algorithm ends at the leafs of the tree, which represent the values of the dice.
+The first and simpler example we are going to use is a PRISM model of a simple probabilistic algorithm, the dice model\cite{KY76}. Figure~\ref{fig:dice} shows the states and the probability of the state transitions. We start at an initial state \textit{S} and we toss a coin at each step, giving us a 50 percent chance of transiting to each of the two following states. The algorithm ends at the leafs of the tree, which represent the values of the dice.
 
 \begin{figure}[ht!]
   \centering
@@ -349,7 +351,7 @@ module process3 = process1[x1=x3, x3=x2 ] endmodule
 \subsection{AALERGIA}
 ALERGIA\cite{Carrasco.1994} was introduced by Rafael C. Carrasco and Jose Oncina in 1994. They proposed an algorithm which is capable of identifying any stochastic deterministic regular language by using a prefix tree acceptor and merging the states in O(|S|\textsuperscript{3}), where |S| is the size of the sample. This is especially useful for learning automaton in realistic situations. They based their approach on previous work from Oncina\cite{Oncina92}. ALERGIA has been extended in many ways, one of many is called AALERGIA\cite{Mao.}.
 \par The reason for creating AALERGIA was to show that the methods for learning probabilistic automata can be adapted for learning Markov Chain system models for verification. The algorithm also leads to stronger consistency for learning in the limit than previous implementations and the authors analyse how the convergence of the learned model relates to the convergence of probability estimates for system properties. This enables us to use the learned model for probabilistic linear temporal logic (PLTL) model checking.
-\par However, there is still room for improvement, as shown in a competition called PAutomaC\footnote{hai.cs.umbc.edu/icgi2012/challenge/Pautomac/index.php} by the winner team\cite{Shibata_the11th}. They introduced a new criterion for merging states based on marginal probability by greedily merging states if it increases the probability of the automaton.
+\par However, there is still room for improvement, as shown by the winning team\cite{Shibata_the11th} in a competition called PAutomaC\footnote{hai.cs.umbc.edu/icgi2012/challenge/Pautomac/index.php}. They introduced a new criterion for merging states based on marginal probability by greedily merging states if it increases the probability of the automaton.
 \par In this paper, we take AALERGIA and the provided MATLAB implementation\footnote{http://mi.cs.aau.dk/code/aalergia}, implement it in python and experiment with it. In order to get a better idea of the way the implementation works, we will describe it in detail and a running example for better replicability is used throughout this section. The implementation of the algorithm consists of several parts, which are depicted in the figure~\ref{fig:diaAalergia}.
 
 \begin{figure}[H]
@@ -405,7 +407,7 @@ Table~\ref{table:alphabet} shows the alphabet, which consists of 8 symbols from 
 \subsubsection{Frequency Prefix Tree Acceptor}
 After loading the training set and the alphabet into the workspace, the Frequency Prefix Tree Acceptor (FPTA) is created. A deterministic frequency finite automaton (DFFA) is a tuple $A = \langle \Sigma, Q, I\textsubscript{fr}, F\textsubscript{fr}, \delta\textsubscript{fr}, \delta \rangle$ where $ \Sigma $ = the finite alphabet, $Q$ = the finite set of states, $I\textsubscript{fr}$ = the initial state frequencies, $F\textsubscript{fr}$ = the final state frequencies, $\delta\textsubscript{fr}$ = the frequency transition function and $ \delta$ = the transition function.
 
-Figure~\ref{fig:fptadice} shows how a simplified FPTA for the in section~\ref{section:diceprograms} described dice model looks like. The sample S is a multiset of size 20. S = \{(SH,1), (SHHH,1), (SHHH\epsdice{1},1), (SHH\epsdice{1},2), (SHH\epsdice{1}\epsdice{1},1), (SHT,2), (SHT\epsdice{2},1), (SHT\epsdice{2}\epsdice{2},1), (SHT\epsdice{3},1), (ST,1), (STH,2), (STH\epsdice{4},1), (STH\epsdice{5},1), (STT,2), (STT\epsdice{6},2)\}. The letter H stands for heads, the letter T stands for tails and \epsdice{1} to \epsdice{6} stands for the different dice values. The numbers in the state indicates the number of the occurrence of the event, whereas the number on the transitions illustrates the count of all events below it.
+Figure~\ref{fig:fptadice} shows how a simplified FPTA for the in section~\ref{section:diceprograms} described dice model looks like. The sample S is a multiset of size 20. S = \{(SH,1), (SHHH,1), (SHHH\epsdice{1},1), (SHH\epsdice{1},2), (SHH\epsdice{1}\epsdice{1},1), (SHT,2), (SHT\epsdice{2},1), (SHT\epsdice{2}\epsdice{2},1), (SHT\epsdice{3},1), (ST,1), (STH,2), (STH\epsdice{4},1), (STH\epsdice{5},1), (STT,2), (STT\epsdice{6},2)\}. The letter H stands for heads, the letter T stands for tails and \epsdice{1} to \epsdice{6} stands for the different dice values. The numbers in the states indicate the count of the occurrences of the event, whereas the numbers on the transitions illustrate the count of all events below it.
 
 \begin{figure}[ht!]
   \centering
@@ -585,7 +587,7 @@ The cell array \emph{prefix} is sorted by width-first-sort (line~\ref{fpta:width
 
 The function \emph{find\_predecessor} searches through the \emph{prefixes} array and saves all the predecessors in the corresponding array (line~\ref{fpta:widthSort}). In the end, a for-loop over all the prefixes is executed in order to find all transitions and their frequencies respectively. The values are saved into the \emph{freq\_trans\_matrix}  (line~\ref{fpta:BeginForFreq} -~\ref{fpta:EndForFreq}). This Matrix contains 2 elements: the first element is the transition matrix, which contains all the transition between the states. The second element is a matrix, which contains all the frequencies between the states.
 
-The returned object DFFA (line~\ref{fpta:return}) has the following members:
+The returned object is a class, which models the DFFA (line~\ref{fpta:return}). It has the following members:
 \begin{itemize}
       \item a finite set of states
       \item the labels of the states
@@ -598,7 +600,7 @@ The returned object DFFA (line~\ref{fpta:return}) has the following members:
       \item BLUE (later used for merging) \me{likewise}
    \end{itemize}
 
-Table~\ref{table:transitionMatrix} shows how the first element of the frequency transition matrix (the transition matrix) is structured. The columns represent the 8 symbols, the rows the different states. For example,  row number 2, column 1 shows the number 3. This indicates that state 2 and symbol 1 lead to state 3. The second element of the frequency transition matrix has the same dimensions as the first element and follows the same logic, but instead of transitions it contains the frequencies.
+Table~\ref{table:transitionMatrix} shows how the first element of the frequency transition matrix (the transition matrix) is structured. The columns represent the 8 symbols, the rows the different states. For example,  row number 2, column 1 shows the number 3. This indicates, that state 2 and symbol 1 lead to state 3. The second element of the frequency transition matrix has the same dimensions as the first element and follows the same logic, but instead of transitions it contains the frequencies.
 
 \begin{table}[ht!]
 \centering
@@ -839,26 +841,242 @@ After having calculated a good $\alpha$ value, we can finally start the AALERGIA
 \end{algorithm}
 
 \subsubsection{Perplexity}
+\me{do i need to add this or can i remove it?}
+
+
 %%% Section RELATED WORK
 \newpage
 \section{Related Work}
-\me{The contest you were looking at. write three paragraphs each of which dedicated to one of the top three approaches; cite the publications (Worst to best).}
+This section summarizes previous and existing approaches in science, which are relevant to this paper. Furthermore, the previously mentioned PAutomaC competition, which was conducted online and focussed on learning of probabilistic automatons, is described and the implementations of the three best teams are presented.
+
+\subsection{Probabilistic machine learning}
+In order to learn probabilistic models, which are perfectly suited for learning real systems in a physical environment, Sen et al.~\cite{Sen2004} adapted the algorithm of \cite{Carrasco.1994} and presented a novel approach for learning continuous time Markov chain models. However, one limitation of their work is that the algorithm doesn't scale up for large underlying blackbox models. Mao et al.~\cite{Mao.} wrote the paper that presented AALERGIA and proved a strong theoretical and experimental consistency with their results. One year later, Mao et al.~\cite{Mao.2012} wrote a paper about learning Markov decision processes for model checking, however, their results need further research, as the algorithm is not suitable for routine use yet.
+
+\subsection{Model checking}
+Model checking is used to make sure that certain properties hold in a given model of a system. It is used for exhaustive and automatic verification of a property in a finite state system. PRISM \me{citation!} model checker has been used for model checking for many network protocols successfully: Duflot et al.~\cite{DKNP06} used probabilistic model checking to compute the performance of different device discovery scenarios in the Bluetooth wireless communication protocol. They managed to perform an exhaustive low level analysis and examined the run times (best and worst) of the protocol, but were limited by the size of the probabilistic models that were needed. In order to cope with this problem, combination with simulation or abstraction and symmetry reduction methods are proposed.
+Kwiatkowska et al.~\cite{KNSW07} performed probabilistic model checking techniques on the CSMA/CD communication protocol and the IEEE1394 FireWire root contention protocol. They give an overview about probabilistic temporal-logic properties of wireless networks~\cite{KNP09a}.
+Matthias Fruth~\cite{Fru06} modelled the IEEE 802.15.4 standard in PRISM model checker and verified correctness properties, like the successful transmission or the amount of collisions, on it.
+
+\subsection{PAutomaC online challenge}
+The PAutomaC online challenge~\cite{Verwer.2014} was conducted in 2012 and its goal was to find the best performing model/algorithm for learning probabilistic automatons. The competition provided different distribution sets, generated from various models with different sizes and ranges. The participants had access to artificially generated training and test sets, which they could use to learn the corresponding string distributions. The learned data structure was not evaluated, so the use of any learning method was allowed. Furthermore, the competition included two real world data sets. As stated on their website, the competition had 38 participants, but only five managed to score points. The clear winner of the competition is team Shibata Yoshinaka~\cite{Shibata_the11th}.
+
+Team Kepler~\cite{Kepler} used variable length N-grams to learn the automatons. They created a tree structure, which they used to store the contexts with variable length. After having inserted all the sequences into the tree, they pruned it with the help of the Kullback-Leibler divergence between the leave and the parent. They managed to produce better results than the 3 gram algorithm, which was provided by the competition.
+Another interesting approach was submitted by team Hulden~\cite{MansHulden.2012}. The team implemented a tool called 'treba', which uses a variant of the Baum-Welch algorithm to train a probabilistic finite automaton. They put strong focus on the numerical stability and the parallelization of the algorithm. Their contribution managed to gain a few points in the competition and performed best on dense instances with few states~\cite{Verwer.2014}.
+
+The winning team Shibata Yoshinaka~\cite{Shibata_the11th} obtained the best perplexity values on most instances. The more data they had, the better their perplexity values became, which indicates, that they make good use of more data. They implemented different algorithms but concluded, that their version of \textit{Collabsed Gibbs Sampling (CGS)}, which is a Bayesian method for sampling, works best on the data. For PDFAs they implemented a state-merging algorithm which is based on the marginal probability. Among the presented algorithms, CGS performed best, but had quite high computational cost. It performs best when there are many strings (100k) or the target contains few (<21) states.
+
 \me{The continue the discussion on SHIBATA and why it is winning every major contest in this field  PAutomataC 2012, CONTEST 2016.}
 
-\section{Meat}
-\me {a case study on wireless sensory networks.}
+\newpage
+\section{Implementation of the AALERGIA algorithm in python}
 
 
+\section{Implementation of the IEEE 802.15.4 PRISM model}
+In order to test our implementation of AALERGIA in python, we decided to learn a simple model of the IEEE 802.15.4 unslotted protocol. The concept of the model was taken from the paper of Wu et al.~\cite{stability}, but the PRISM model was implemented by us. The model originally was considered to be a probabilistic timed automaton (PTA). However, since PRISM model checker only provides limited support for PTAs, we cannot generate traces out of them. Fortunately, there is a way around that issue. It is possible to convert the PTA to a finite state Markov decision process, using the digital clocks approach presented in the paper of Kwiatkowska et al.~\cite{KNPS06}.
+
+A wireless network control system (WNCS) with two sending modules and one channel module in parallel composition is considered. The two sending modules start their sending process at the same time. They access the channel according to the unslotted CSMA/CA protocol. The protocol uses a mechanism called exponential backoff. A sender listens to the channel before sending. If the channel is busy, it waits a random amount of time, before attempting to send again. Since we are modelling a MDP, we need to work with discrete time. The smallest unit of time in our model is balled backoff period \textit{T\textsubscript{b}}. If the sender wants to send a packet, it needs to initialise the variables \textit{NB} and \textit{BE}. Each sender might have different \textit{BE} and \textit{NB} values during its sending process. \textit{NB} denotes the number of times a backoff was required (due to a busy channel). The upper bound is called \textit{NB\textsubscript{max}}. \textit{BE} describes the backoff-exponent and is related to the random amount of time the sender waits before it attempts to listen to the channel again. \textit{BE} is initially set to \textit{BE\textsubscript{min}} and the upper bound is \textit{BE\textsubscript{max}}.
+
+Figure~\ref{IEEE802:pdf} shows, how the sender (a) and the channel (b) are modelled.
+
+\begin{figure}[ht!]
+  \centering
+\includegraphics[page=1]{data/stability_cropped.pdf}
+\caption{The concept of the sender and the channel}
+\label{IEEE802:pdf}
+\end{figure}
+\me{CITE THE IMAGE CORRECTLY}
+
+The sender starts by setting the backoff time, which is discrete and chosen randomly between 0\textit{T\textsubscript{B}} and ($2^{BE_{min}} - 1$)\textit{T\textsubscript{B}}. After that, it enters a state where it waits for the backoff time to expire. Next, the sender listens to the channel, this takes \textit{T\textsubscript{CCA}} time. From there on, three transitions can be taken. If the channel is busy and the number of backoff times \textit{NB} is equal to \textit{NB\textsubscript{max}}, the module ends in the state \textit{FAILURE} and stays there. However, if the channel is busy but \textit{NB} is smaller than \textit{NB\textsubscript{max}}, the sending module starts with its first state again. Additionally, \textit{BE} is increased by one, which increases the chance for a longer backoff time. \textit{NB} is also increased by one, noting that one more backoff attempt is started. Last but not least, if the channel is idle, the sender can start sending the packet. Once the process is finished, it remains in the state \textit{DONE}.
+
+The channel module is simple as well. It implements two states, \textit{c1} and \textit{c2}, that indicate the channel condition. If $c1=c2=0$, the channel is idle. If $c1=1$ or $c2=1$, either \textit{c1} or \textit{c2} are sending. If both of the sending modules are attempting to send at the same time, $c1=c2=2$ and the process failed due to a collision.
+
+The source code of the PRISM model for the channel is shown in Figure~\ref{fig:channelmodel}.
+
+\begin{figure}[ht!]
+\begin{lstlisting}[language=Prism, ,escapechar=|]
+
+module channel
+	c1 : [0..2] init 0;
+	c2 : [0..2] init 0;
+
+	[send1] c1=0 & c2=0 -> (c1'=1);
+	[send2] c2=0 & c1=0 -> (c2'=1);
+
+	// check if something is sent -> collision!
+	[send1] c1=0 & c2>0 -> (c1'=2) & (c2'=2);
+	[send2] c2=0 & c1>0 -> (c1'=2) & (c2'=2);
+
+	// message was sent and channel is clear again
+	[finish1] c1>0 -> (c1'=0);
+	[finish2] c2>0 -> (c2'=0);
+endmodule
+
+\end{lstlisting}
+\caption{The PRISM Channel Model for IEEE 802.15.4 unslotted}
+\label{fig:channelmodel}
+\end{figure}
+
+The source code of the PRISM model for the sender is shown in Figure~\ref{fig:sendermodel}. The code depicts, in the PRISM coding language, the various guards, which are used to decide which states can be reached in the next step. The sender has a clock \textit{x}, which is increasing during each time step and has a maximum value of \textit{SAMPLING\_TIME}, which is 80 by default. The guards where \textit{s=2} model the non determinism of the packet length, that varies from 20-30\textit{T\textsubscript{B}}.
+
+\begin{figure}[H]
+\begin{lstlisting}[language=Prism, ,escapechar=|]
+
+module sender1
+
+	NB : [0..NB_MAX] init 0;
+	BE : [0..BE_MAX] init BE_MIN;
+	BOFF_DELAY : [0..BOFF_DELAY_MAX];
+
+	DL : [0..DL_MAX] init DL_MAX;
+
+	s : [0..5] init 0; // location
+	// 0 : SET BACKOFF TIME
+	// 1 : BACKOFF
+	// 2 : CCA
+	// 3 : DATA TRANSMISSION
+	// 4 : DONE
+	// 5 : FAILED
+
+	x : [0..SAMPLING_TIME] init 0; // clock
+
+	[] s = 0 & BE=1 -> (1/2):(s'=1) & ...;
+	[] s = 0 & BE=2 -> (1/4):(s'=1) & ...;
+	[] s = 0 & BE=3 -> (1/8):(s'=1) & ...;
+	[] s = 0 & BE=4 -> (1/16):(s'=1) & ...;
+	[] s = 0 & BE=5 -> (1/32):(s'=1) & ...;
+	[] s = 0 & BE=6 -> (1/64):(s'=1) & ...;
+
+	[time] s=1 & x < TB -> (x'=min(x+1,SAMPLING_TIME));
+	[] s=1 & x = TB & BOFF_DELAY > 0 -> (s'=1) & (x'=0) & (BOFF_DELAY'=BOFF_DELAY-1);
+	[] s=1 & x = TB & BOFF_DELAY = 0 -> (s'=2) & (x'=0);
+
+	[time] s=2 & x < TCCA -> (x'=min(x+1,SAMPLING_TIME));
+	
+	[] s=2 & x = TCCA & ch_busy & NB < NB_MAX  -> (x'=0) & (NB' = min(NB+1, NB_MAX)) & (BE' = min(BE+1, BE_MAX)) & (s'=0);
+	[] s=2 & x = TCCA & ch_busy & NB = NB_MAX  -> (s'=5);
+
+	// Move to next state, set nondeterministic data_length
+	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DL'=DL_MAX-10);
+	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DL'=DL_MAX-9);
+	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DL'=DL_MAX-8);
+	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DL'=DL_MAX-7);
+	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DL'=DL_MAX-6);
+	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DL'=DL_MAX-5);
+	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DL'=DL_MAX-4);
+	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DL'=DL_MAX-3);
+	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DL'=DL_MAX-2);
+	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DL'=DL_MAX-1);
+	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DL'=DL_MAX-0);
+
+	[time] s=3 & x < DATA_LENGTH -> (x'=min(x+1,SAMPLING_TIME));
+	[finish1] s=3 & x = DATA_LENGTH & ch_busy -> (s'=4);
+
+	[time] s = 4 -> (s'=4); // FINISHED, stay here
+
+	[time] s = 5 -> (s'=5); // FAILED, stay here
+endmodule
+
+\end{lstlisting}
+\caption{The PRISM Sender Model for IEEE 802.15.4 unslotted}
+\label{fig:sendermodel}
+\end{figure}
 
 \newpage
+\section{Generating traces of the model and learning the model with AALERGIA}
+In order to generate traces out of the PRISM model we mentioned in the previous section, some reflections need to be done. It is especially important to think about how the states can be represented in the traces and how the alphabet looks like. The level of detail can be abstracted or more refined. For the final model, the discrete time Markov chain created by AALERGIA, only the time steps in the MDP are essential. This allows us to filter all the steps in the traces, that are not related to changes in time.
+
+When we look at our system, only the states of the two senders and the state of the channel is of importance. This is represented by a symbol that depicts the state of the first sender, the state of the second sender, the channel condition 1 and the channel condition 2 in a row. Every symbol stands for a time step and all the symbols in a trace are seperated by commas. A random example of these traces is shown in table~\ref{table:tracemodel}. For instance, a symbol like \textit{1301} shows, that sender 1 is in state 1, sender 2 is in state 3, channel condition 1 is in state 0 and channel condition 2 is in state 1. If we look at our model, this means, that sender 2 is sending and sender 1 is waiting.
+
+\begin{table}[ht!]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\gray & \gray  1                                 \\ \hline
+\gray 1&0000,1100,2100,3110,3110,3110,3210,3110,3110,3110,3110,3110,3110,3210,3110,3110,3110, \\
+\hline
+\gray 2&0000,1100,1100,1100,1100,1100,1200,1301,1301,2301,1301,2301,1301,2301,1301,2301,1301, \\
+\hline
+\gray 3&0000,1100,1100,1200,1301,1301,2301,1301,2301,1301,1301,1301,1301,1301,1301,2301,1301, \\
+\hline
+\end{tabular}
+\caption{The Traces of the IEEE 802.15.4 protocol}
+\label{table:tracemodel}
+\end{table}
+
+In order to create the DTMC, AALERGIA needs an alphabet as well. The full alphabet contains all the symbols that can occur in the traces and is contained in a seperate file. An example is given in table~\ref{table:alphmodel}.
+
+\begin{table}[ht!]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\gray & \gray  1                                 \\ \hline
+\gray 1&0000 \\
+\hline
+\gray 2&1100 \\
+\hline
+\gray 3&2100 \\
+\hline
+\gray 3&3110 \\
+\hline
+\gray 3&3210 \\
+\hline
+\gray 3&4301 \\
+\hline
+\gray 3&1200 \\
+\hline
+\gray 3&2301 \\
+\hline
+\end{tabular}
+\caption{A Sample of the alphabet of the IEEE 802.15.4 protocol}
+\label{table:alphmodel}
+\end{table}
+
+
 \section{Evaluation}
-\me {compare the findings about the case study with real-world scenario and the knowledge of an expert in the field of wireless sensory networks.}
+\me{descirbe the value of sample period, describe the PR measure, describe the random packet length...}
+\me{how well did the idea work? experimental setup, results...}
 
 
+After learning the DTMC model with AALERGIA, the results need to be compared by model checking. The initial question Wu et al.~\cite{stability} tried to answer with probabilistic model checking was, whether the network is stable or not. For this reason, they defined the minimum probability they are interested in as follows:
+\begin{itemize}
+  \item \textit{PR = The minimum probability of both stations successfully transmitting their packets within one sampling period}
+\end{itemize}
+
+This can be checked by satisfying the stability specification:
+\begin{itemize}
+  \item $\mathcal{P}_{\geq1-p}$ [true $\mathcal{U}$ (done1 $\land$ done2 $\land$ z $\leq$h)]
+\end{itemize}
+
+We compared the minimum probability Wu et al. with their setup got as a result to the result we got with our model and after we applied ALLERGIA on the DTMC.
+
+\centering
+	\begin{tikzpicture}
+		\begin{axis}[ymin=0, xlabel={BE\textsubscript{min}}, ylabel={PR}, legend entries={PTA,MDP,DTMC}, legend style={at={(1,1)},anchor=north west,nodes=right}]
+			\addplot table {data/be_min_paper.csv};
+            \addplot table {data/be_min_model.csv};
+            \addplot table {data/be_min_learned.csv};
+		\end{axis}
+	\end{tikzpicture}
+
+	\begin{tikzpicture}
+		\begin{axis}[ymin=0, xlabel={BE\textsubscript{max}}, xtick={3,4,5,6}, ylabel={PR}, legend entries={PTA,MDP,DTMC}, legend style={at={(1,1)},anchor=north west,nodes=right}]
+			\addplot table {data/be_max_paper.csv};
+            \addplot table {data/be_max_model.csv};
+            \addplot table {data/be_max_learned.csv};
+		\end{axis}
+	\end{tikzpicture}
+
+	\begin{tikzpicture}
+		\begin{axis}[ymin=0, xlabel={NB\textsubscript{max}}, ylabel={PR}, legend entries={PTA,MDP,DTMC}, legend style={at={(1,1)},anchor=north west,nodes=right}]
+			\addplot table {data/nb_max_paper.csv};
+			\addplot table {data/nb_max_model.csv};
+			\addplot table {data/nb_max_learned.csv};
+		\end{axis}
+	\end{tikzpicture}
 
 \newpage
 \section{Conclusions}
-\me{the approach is good; but!}
+\me{the approach is good; but! state advantages and disadvantages, no new infos!}
 
 \appendix
  \bibliographystyle{ieeetr}
