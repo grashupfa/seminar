@@ -148,29 +148,36 @@ a4paper,
 
 \pagenumbering{arabic}
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%
 %%% begin main document
 %%%
+\begin{abstract}
+  Abstract - this is used to describe the whole paper.
+  \mw{write the abstract}
+\end{abstract}
+
+
+
 \section{Introduction}
 In the industry, model-driven development techniques are getting more and more important, as you can use them for simulation, documentation, model-checking, performance evaluation and many other things. The main problem with these techniques is the part where the model is constructed, because it is often costly and time consuming. Machine Learning techniques try to ease this by automatically constructing a high level model of an unknown system. These techniques are classified into two different categories, supervised learning and unsupervised learning approaches.
 
-\par Supervised learning is the task of inferring knowledge from a fully labeled training data. In contrast, unsupervised learning is the task of inferring knowledge from an unlabeled dataset. In real-world scenarios the usual case is to deal with gigantic datasets that are only partially labeled. These real-world datasets are difficult to deal with because performing supervised learning is not possible due to lack of training data, and doing unsupervised learning is not cost-effective or beneficiary considering accuracy and precision. The common ground of supervised and unsupervised learning, is the task of inferring knowledge from a small amount of labeled data and a huge amount of unlabeled training data; i.e., \emph{semi-supervised learning}. In other words, semi-supervised learning is making use of that small amount of data (i.e., supervised learning) to do unsupervised learning considerably more accurate.
+\par Supervised learning is the task of inferring knowledge from a fully labeled training data. In contrast, unsupervised learning is the task of inferring knowledge from an unlabeled dataset. In real-world scenarios, the usual case is to deal with gigantic datasets that are only partially labeled. These real-world datasets are difficult to deal with, because performing supervised learning is not possible due to lack of training data, and doing unsupervised learning is not cost-effective or beneficiary considering accuracy and precision. The common ground of supervised and unsupervised learning is the task of inferring knowledge from a small amount of labeled data and a huge amount of unlabeled training data; i.e., \emph{semi-supervised learning}. In other words, semi-supervised learning is making use of that small amount of data (i.e., supervised learning) to do unsupervised learning considerably more accurate.
 
 \par \emph{Active learning} is a special case of semi-supervised learning in which the labeled data is incrementally provided by a continuous interaction between the \emph{learner} and an \emph{oracle}. The oracle can be a user, a system, or a teacher that provides a certain level of insight to supervise the learner by letting it to actively query for labels of unknown data. When the oracle is a system, actively querying it only means the learner is iteratively providing the system with input alphabet and asking for the output alphabet.
 
 %\par This method is commonly used to learn models of reactive systems by actively providing them with external events (i.e., inputs) and observe how they react to them (i.e., outputs). Though, sometimes active learning can be as expensive as manual labeling since not all runs of all systems are inexpensive or repeatable; to exemplify, consider a scenario in which an input sequence triggers a safety critical behaviour of the system (e.g. self-termination).
 
-\par A popular algorithm proposed by Angluin \cite{Angluin.1987} is called L$^*$. A so called \textit{learner} efficiently learns an unknown regular set from an \textit{oracle} by repeatedly asking questions and saving the findings in an observation table. There are two types of questions the learner can ask the oracle. First, she can ask whether a given string is a member of the unknown set (i.e., membership query) to which the oracle replies with yes or no. Second, a conjecture can be made and the oracle answers if the set is correct (i.e., equivalence query). If the set is incorrect, a counterexample is provided. The oracle can also be substituted by a random sampling \textit{teacher}. The outcome of the algorithm is a minimal deterministic finite automaton (DFA).
+\par A popular active learning algorithm was proposed by Angluin \cite{Angluin.1987} in 1987 and is called L$^*$. In this context, the \textit{learner} efficiently learns an unknown regular set from an \textit{oracle} by repeatedly asking questions and saving the findings in an observation table. There are two types of questions the learner can ask the oracle. First, she can ask whether a given string is a member of the unknown set (i.e., membership query) to which the oracle replies with yes or no. Second, a conjecture can be made and the oracle answers if the set is correct (i.e., equivalence query) or incorrect. In the later case, a counterexample is provided. The oracle can also be substituted by a random sampling \textit{teacher}. The outcome of the algorithm is a minimal deterministic finite automaton (DFA).
 
-\par Although L$^*$ is a quite useful automata learning approach, there are also issues with it; first of which is while using L$^*$ the learner either learns the correct system or nothing. Next issue with L$^*$ is actually stated earlier, that is, when it is impossible for some systems to perform some queries for various reasons (e.g. not being cost-effective, safety critical behaviour, expensive overheads, randomly changing behaviour, and etc.). Moreover, there are some difficulties when trying to learn deterministic model of an unknown system; one of which is its randomly changing behaviours. For these reasons, sometimes it is better to construct the stochastic or nondeterministic model of the system under learn by sufficiently observing system's behaviour. Similarly, passive learning (i.e., unsupervised learning) is recently used to learn the somewhat correct model of the system under learn out of its execution traces that represent the actual behaviour of the system.
+\par Although L$^*$ is a quite useful automata learning approach, there are also issues with it; first of which is while using L$^*$ the learner either learns the correct system or nothing. Next issue with L$^*$ is actually stated earlier, that is, when it is impossible for some systems to perform some queries for various reasons (e.g. not being cost-effective, safety critical behaviour, expensive overheads, randomly changing behaviour, and etc.). Moreover, there are some difficulties when trying to learn deterministic model of an unknown system; one of which is its randomly changing behaviours. For these reasons, sometimes it is better to construct the stochastic or nondeterministic model of the system under learn by sufficiently observing the system's behaviour. Similarly, passive learning (i.e., unsupervised learning) is recently used to learn the somewhat correct model of the system under learn out of its execution traces that represent the actual behaviour of the system.
 
-\par AALERGIA \cite{Mao.} is an interesting passive learning approach to learn a stochastic model of an unknown system. This approach learns a stochastic model by using only previously observed patterns in execution traces of the system for it cannot or may not be queried as in Angluin's algorithm. In contrast to statistical model checking, AALERGIA extracts an explicit probabilistic model, which one can use to verify a large class of properties without the need to re-sample the system. It is crucial to note that learning these kinds of models can represent different views of the underlying system, depending on the input and output actions. Therefore, if we tailor the observations to the properties of interest, our verification will be simpler and more efficient.
+\par In this paper, we look into \emph{AALERGIA} \cite{Mao.}, which is an extension of the well-known ALERGIA algorithm~\cite{Carrasco.1994}. This approach learns a stochastic model by using only previously observed patterns in execution traces of the system (passive learning) for it cannot or may not be queried as in Angluin's algorithm. In contrast to statistical model checking, \emph{AALERGIA} extracts an explicit probabilistic model, which one can use to verify a large class of properties without the need to re-sample the system. It is crucial to note that learning these kinds of models can represent different views of the underlying system, depending on the input and output actions. Therefore, if we tailor the observations to the properties of interest, our verification will be simpler and more efficient.
 
 
-\me{You need a paragraph describing what is the structure of your seminar paper like; this seminar paper will study AALERGIA algorithm in detail blah blah blah for which the next section is dedicated to some preliminaries. In section 3 we study .... and finally in section $n$ we conclude.}
+\me{You need a paragraph describing what is the structure of your seminar paper like; this seminar paper will study \emph{AALERGIA} algorithm in detail blah blah blah for which the next section is dedicated to some preliminaries. In section 3 we study .... and finally in section $n$ we conclude.}
 
-\me{right now the introduction is telling a story and it is coherent but not coherent enought; I would like you to go through it and polish it further.}
 %%% Section PRELIMINARY
 \newpage
 \section{Preliminaries}
@@ -195,7 +202,7 @@ DTMC is actually representing a stochastic processes in discrete time $n \in \ma
 \subsubsection{Markov Decision Process}
 Markov Decision Process (MDP) is another variation of Markov models, used to model non-autonomous (controlled) systems whose states are fully observable. An MDP is an extended DTMC such that it allows both probabilistic and non-deterministic behaviour. MDP is a tuple $M=(Q, q_0, AP, \tau, L)$ where $Q$ is a finite non-empty set of states, $q_0$ is the initial state, $AP$ is a finite non-empty set of atomic propositions, $\Sigma = 2^{AP}$ is a finite alphabet, $L:Q \to \Sigma$ is a state labeling function, and $\tau: Q \times AP \times Q \to [0,1]$ is the partial probabilistic transition function defined for all $q$ and $\sigma$ where $\sigma \in L(q)$.
 \subsection{PRISM Model Checker}
-Dealing with deterministic models it is easy to associate states with strings. Despite the fact that it is not a one-to-one association it is an effective lexicographical representation for not only it is possible to identify a particular state by having a string belonging to set of all strings emanates from it but it also is possible to denote an arbitrary string by a particular state.
+When dealing with deterministic models, it is easy to associate states with strings. Despite the fact that it is not a one-to-one association, it is an effective lexicographical representation. It is not only possible to identify a particular state by having a string belonging to a set of all strings emanating from it but it also is possible to denote an arbitrary string by a particular state.
 A path over the states $q_0, \dots, q_n$ of a state labeled deterministic Markovian model $M$ gives rise to a trace $s = \sigma_1, \dots, s_n$ whose occurrence probability is defined by $\Prob{M}(s)$ as:
 \begin{equation*}
   \Prob{M}(s) = \prod_{i=0}^{n-1}\tau(q_i,q_{i+1}),
@@ -220,7 +227,7 @@ Semantic of a PLTL can be defined over a deterministic Markovian model $M$ as:
 \end{equation*}
 where $\Prob{M}(\varphi)$ denotes $\Prob{M}(\{s~|~s \models \varphi \})$ meaning a string belonging to $M$ models $\varphi$.
 \subsubsection{Dice Model} \label{section:diceprograms}
-The first and simpler example we are going to use is a PRISM model of a simple probabilistic algorithm, the dice model\cite{KY76}. Figure~\ref{fig:dice} shows the states and the probability of the state transitions. We start at an initial state \textit{S} and we toss a coin at each step, giving us a 50 percent chance of transiting to each of the two following states. The algorithm ends at the leafs of the tree, which represent the values of the dice.
+Since we are going to explain the \emph{AALERGIA} implementation in detail, we are going to use two different running examples, which help us to explain the way the algorithm works. The first and simpler example is a probabilistic algorithm, the dice model\cite{KY76}. We are mainly using it for the explanation of the frequency prefix tree acceptor (FTPA) creation in the \emph{AALERGIA} algorithm. Figure~\ref{fig:dice} shows the states and the probability of the state transitions. We start at an initial state \textit{S} and we toss a coin at each step, giving us a 50 percent chance of transiting to each of the two following states. The algorithm ends at the leafs of the tree, which represent the values of the dice.
 
 \begin{figure}[ht!]
   \centering
@@ -319,10 +326,10 @@ endmodule
 \end{figure}
 
 \subsubsection{Herman's Self-Stabilisation Algorithm}
-The running example we are going to use in this paper (unless explicitly stated otherwise) is a PRISM model of Herman's self-stabilising algorithm, as described in \cite{Kwiatkowska.2012}. The algorithm guarantees that the system recovers from faults in a certain amount of time. Although it is certain that the system self-stabilises eventually, it is very hard to analyse the maximum execution time, which depicts the worst case scenario in this case.
+The second running example we are going to use in this paper is a PRISM model of Herman's self-stabilising algorithm, as described in \cite{Kwiatkowska.2012}. The algorithm guarantees that the system recovers from faults in a certain amount of time. Although it is certain that the system self-stabilises eventually, it is very hard to analyse the maximum execution time, which depicts the worst case scenario in this case.
 \par Herman's algorithm works with a network of an odd number of identical processes in a ring, ordered anticlockwise. The processes work synchronously and possess a token, which is passed around the ring. The result of a random coin toss decides whether the process keeps the token or passes it on to its neighbour. If a process holds two tokens, they are eliminated. The result is a stable system, where each process has exactly one token and the tokens are passed around forever in the ring. In order to analyse the correctness and the performance of the proposed model, the authors use the tool PRISM Model Checker and invoke probabilistic model checking methods on the model.
 \par The proposed methods worked well and proved the correctness of the algorithm. Their findings on the maximum execution time showed, that having 3 tokens, spaced evenly around the ring, always produced the worst-case behaviour. It is stated that probabilistic model checking is extremely useful for checking models of this kind, because simple tools, languages and techniques are provided to model the system. Also, an exhaustive analysis can be done, as opposed to other simulation techniques such as the Monte Carlo simulation. A disadvantage is the restriction of probabilistic model checking to finite state models. Furthermore, the size of the models under analysis are limited to the amount of time and space available.
-\par The source code of the model is shown in figure~\ref{fig:hermanmodel}. In this case, seven processes are used in the ring. The step notation in line~\ref{hermanmodel:step} forces all processes to synchronise. The state of each process is depicted by a single two-valued variable (x1-x3). Initially, the value is 1 for all processes. The implementation of this model is straightforward and it is used as a data generator for the input of the AALERGIA implementation.
+\par The source code of the model is shown in figure~\ref{fig:hermanmodel}. In this case, seven processes are used in the ring. The step notation in line~\ref{hermanmodel:step} forces all processes to synchronise. The state of each process is depicted by a single two-valued variable ($x1$,$x2$,$x3$). Initially, $x1=x2=x3=1$. The implementation of this model is straightforward and the output of it (the traces of the system) are used as input for \emph{AALERGIA}.
 
 \begin{figure}[ht!]
 \begin{lstlisting}[language=Prism, ,escapechar=|]
@@ -349,10 +356,10 @@ module process3 = process1[x1=x3, x3=x2 ] endmodule
 \end{figure}
 
 \subsection{AALERGIA}
-ALERGIA\cite{Carrasco.1994} was introduced by Rafael C. Carrasco and Jose Oncina in 1994. They proposed an algorithm which is capable of identifying any stochastic deterministic regular language by using a prefix tree acceptor and merging the states in O(|S|\textsuperscript{3}), where |S| is the size of the sample. This is especially useful for learning automaton in realistic situations. They based their approach on previous work from Oncina\cite{Oncina92}. ALERGIA has been extended in many ways, one of many is called AALERGIA\cite{Mao.}.
+ALERGIA\cite{Carrasco.1994} was introduced by Rafael C. Carrasco and Jose Oncina in 1994. They proposed an algorithm which is capable of identifying any stochastic deterministic regular language by using a prefix tree acceptor and merging the states in O(|S|\textsuperscript{3}), where |S| is the size of the sample. This is especially useful for learning automaton in realistic situations. They based their approach on previous work from Oncina\cite{Oncina92}. ALERGIA has been extended in many ways, one of many is called \emph{AALERGIA}\cite{Mao.}.
 \par The reason for creating AALERGIA was to show that the methods for learning probabilistic automata can be adapted for learning Markov Chain system models for verification. The algorithm also leads to stronger consistency for learning in the limit than previous implementations and the authors analyse how the convergence of the learned model relates to the convergence of probability estimates for system properties. This enables us to use the learned model for probabilistic linear temporal logic (PLTL) model checking.
 \par However, there is still room for improvement, as shown by the winning team\cite{Shibata_the11th} in a competition called PAutomaC\footnote{hai.cs.umbc.edu/icgi2012/challenge/Pautomac/index.php}. They introduced a new criterion for merging states based on marginal probability by greedily merging states if it increases the probability of the automaton.
-\par In this paper, we take AALERGIA and the provided MATLAB implementation\footnote{http://mi.cs.aau.dk/code/aalergia}, implement it in python and experiment with it. In order to get a better idea of the way the implementation works, we will describe it in detail and a running example for better replicability is used throughout this section. The implementation of the algorithm consists of several parts, which are depicted in the figure~\ref{fig:diaAalergia}.
+\par In this paper, we take \emph{AALERGIA} and the provided MATLAB implementation\footnote{http://mi.cs.aau.dk/code/aalergia}, implement it in python and experiment with it. In order to get a better idea of the way the implementation works, we will describe it in detail and a running example for better replicability is used throughout this section. The implementation of the algorithm consists of several parts, which are depicted in the figure~\ref{fig:diaAalergia}.
 
 \begin{figure}[H]
 \begin{center}
@@ -370,12 +377,12 @@ ALERGIA\cite{Carrasco.1994} was introduced by Rafael C. Carrasco and Jose Oncina
 \end{figure}
 
 \subsubsection{Training Data}
-The data used to learn the Deterministic Labeled Markov Chain (DLMC) is supplied in the form of a comma separated values file, which contains the training set and the alphabet to be used. The alphabet consists of a finite 1$\times$N-cell array, where each column contains one letter in the alphabet. The training set consist of a finite N$\times$1-cell array, where each row contains sequences of symbols generated from the model, separated by commas.
-\paragraph{Dataset Generator} It is easy to generate datasets by using the command line version of PRISM. It is possible to generate random paths through a model by specifying the model file, an output file and the path to be generated (for instance, how many steps should be processed). The output file can then be used as input file for the AALERGIA implementation.
-\par The running example we are going to use is a self-stabilizing ring network with 3 processes.
+The data used to learn the Deterministic Labeled Markov Chain (DLMC) is supplied in the form of comma separated value files, which contain the training set and the alphabet to be used. The alphabet consists of a finite 1$\times$N-cell array, where each column contains one letter in the alphabet. The training set consist of a finite N$\times$1-cell array, where each row contains sequences of symbols generated from the model, separated by commas.
+\paragraph{Dataset Generator} It is possible to generate datasets by using the command line version of PRISM. With this, it is feasible to generate random paths through the model by specifying the model file, an output file and the path to be generated (for instance, the amount of steps to be processed). The output file can then be used as input file for the \emph{AALERGIA} implementation.
+\par The running example we are mainly going to use is a self-stabilizing ring network with 3 processes.
 Table~\ref{table:trainingsSet} shows the beginning of the training set, generated by the PRISM modelchecker, which contains 50 Sequences in total.  In our case, each symbol in the training set represents the states in the ring at a given moment. For example, the symbol 001 shows that process 3 is in the state 1 and process 1 and 2 are in the state 0.
 
-\begin{table}[ht!]
+\begin{table}[h]
 \centering
 \begin{tabular}{|l|l|}
 \hline
@@ -405,7 +412,7 @@ Table~\ref{table:alphabet} shows the alphabet, which consists of 8 symbols from 
 \end{table}
 
 \subsubsection{Frequency Prefix Tree Acceptor}
-After loading the training set and the alphabet into the workspace, the Frequency Prefix Tree Acceptor (FPTA) is created. A deterministic frequency finite automaton (DFFA) is a tuple $A = \langle \Sigma, Q, I\textsubscript{fr}, F\textsubscript{fr}, \delta\textsubscript{fr}, \delta \rangle$ where $ \Sigma $ = the finite alphabet, $Q$ = the finite set of states, $I\textsubscript{fr}$ = the initial state frequencies, $F\textsubscript{fr}$ = the final state frequencies, $\delta\textsubscript{fr}$ = the frequency transition function and $ \delta$ = the transition function.
+After importing the trainings set and the alphabet from the files, the Frequency Prefix Tree Acceptor (FPTA) is created. A deterministic frequency finite automaton (DFFA) is a tuple $A = \langle \Sigma, Q, I\textsubscript{fr}, F\textsubscript{fr}, \delta\textsubscript{fr}, \delta \rangle$ where $ \Sigma $ = the finite alphabet, $Q$ = the finite set of states, $I\textsubscript{fr}$ = the initial state frequencies, $F\textsubscript{fr}$ = the final state frequencies, $\delta\textsubscript{fr}$ = the frequency transition function and $ \delta$ = the transition function.
 
 Figure~\ref{fig:fptadice} shows how a simplified FPTA for the in section~\ref{section:diceprograms} described dice model looks like. The sample S is a multiset of size 20. S = \{(SH,1), (SHHH,1), (SHHH\epsdice{1},1), (SHH\epsdice{1},2), (SHH\epsdice{1}\epsdice{1},1), (SHT,2), (SHT\epsdice{2},1), (SHT\epsdice{2}\epsdice{2},1), (SHT\epsdice{3},1), (ST,1), (STH,2), (STH\epsdice{4},1), (STH\epsdice{5},1), (STT,2), (STT\epsdice{6},2)\}. The letter H stands for heads, the letter T stands for tails and \epsdice{1} to \epsdice{6} stands for the different dice values. The numbers in the states indicate the count of the occurrences of the event, whereas the numbers on the transitions illustrate the count of all events below it.
 
@@ -490,7 +497,7 @@ Figure~\ref{fig:fptadice} shows how a simplified FPTA for the in section~\ref{se
   \caption{The FPTA for the DICE model}\label{fig:fptadice}
 \end{figure}
 
-\par Algorithm~\ref{alg:fpta} shows how the creation of the FPTA is implemented in the AALERGIA package. The code starts by sorting the training set and by removing double occurrences (line~\ref{fpta:sort}).
+\par Algorithm~\ref{alg:fpta} shows how the creation of the FPTA is implemented in the \emph{AALERGIA} package. The code starts by sorting the training set and by removing double occurrences (line~\ref{fpta:sort}).
 After that, a for-loop iterates through the sorted strings and splits them at each comma (line~\ref{fpta:BeginForPrefix} -~\ref{fpta:EndForPrefix}).
 This creates all the prefixes from the training set and adds them to the cell array named \emph{prefix}, as shown in Table~\ref{table:prefix}.
 \begin{table}[ht!]
@@ -587,7 +594,7 @@ The cell array \emph{prefix} is sorted by width-first-sort (line~\ref{fpta:width
 
 The function \emph{find\_predecessor} searches through the \emph{prefixes} array and saves all the predecessors in the corresponding array (line~\ref{fpta:widthSort}). In the end, a for-loop over all the prefixes is executed in order to find all transitions and their frequencies respectively. The values are saved into the \emph{freq\_trans\_matrix}  (line~\ref{fpta:BeginForFreq} -~\ref{fpta:EndForFreq}). This Matrix contains 2 elements: the first element is the transition matrix, which contains all the transition between the states. The second element is a matrix, which contains all the frequencies between the states.
 
-The returned object is a class, which models the DFFA (line~\ref{fpta:return}). It has the following members:
+The returned object is a \emph{DFFA} class, representing the DFFA (line~\ref{fpta:return}). It has the following members:
 \begin{itemize}
       \item a finite set of states
       \item the labels of the states
@@ -596,8 +603,8 @@ The returned object is a class, which models the DFFA (line~\ref{fpta:return}). 
       \item the initial state frequency
       \item the final state frequency
       \item the frequency transition matrix
-      \item RED (later used for merging) \me{be more comprehensive about RED set}
-      \item BLUE (later used for merging) \me{likewise}
+      \item RED states: a finite set of states, which have already been determined to be in the final DLMC
+      \item BLUE states: a finite set of states, which need to be tested for compatiblity
    \end{itemize}
 
 Table~\ref{table:transitionMatrix} shows how the first element of the frequency transition matrix (the transition matrix) is structured. The columns represent the 8 symbols, the rows the different states. For example,  row number 2, column 1 shows the number 3. This indicates, that state 2 and symbol 1 lead to state 3. The second element of the frequency transition matrix has the same dimensions as the first element and follows the same logic, but instead of transitions it contains the frequencies.
@@ -646,16 +653,9 @@ The algorithm searches through the frequency transition matrix, sums up the freq
 
 \subsubsection{Golden Section Search}
 
-First, we need to search for a left and right border of $\varepsilon$ in order to get a region for our golden section search. This is done by the following algorithm~\ref{alg:findregion}. In order to save space, the algorithm only explains how to find the left border of the region. The right border is found the same way, with some minor modifications. The algorithm iteratively calculates BIC-scores for the values of $\varepsilon$. For each run of the while-loop, the $\varepsilon$ is multiplied by 0.5 until a left border is found. If the new $\varepsilon$ produces a Bayesian Information Criterion(BIC)-score larger than the previous $\varepsilon$ (line~\ref{findregion:scorelarger}), it essentially means that we found a right border, but the left border is further to the left and we need to search again. If the new score is the same as the old score  (line~\ref{findregion:scorethesame}), we search again. If the value of the score doesn't change for 5 consecutive tries, we break the loop and take the last value of $\varepsilon$ as our left border. Last but not least, if the new score is smaller than the old score (line~\ref{findregion:scoresmaller}), we found the left border and can continue searching for the right border (not shown in the pseudo code).
-\paragraph{BIC Score} This is a measure that can be used to evaluate the learned model. It creates a score that is calculated on the likelihood minus a penalty term for the model complexity. The BIC score of a given DLMC A given data $S[n]$ is defined in formula~\ref{eq:bic}
+First, we need to search for a left and right border of $\varepsilon$ in order to get a region for our golden section search. This is done by the following algorithm~\ref{alg:findregion}. In order to save space, the algorithm only explains how to find the left border of the region. The right border is found the same way, with some minor modifications. The algorithm iteratively calculates BIC-scores for the values of $\varepsilon$. For each run of the while-loop, the $\varepsilon$ is multiplied by 0.5 until a left border is found. If the new $\varepsilon$ produces a Bayesian Information Criterion(BIC)-score larger than the previous $\varepsilon$ (line~\ref{findregion:scorelarger}), it essentially means that we found a right border, but the left border is further to the left and we need to search again. If the new score is the same as the old score  (line~\ref{findregion:scorethesame}), we search again. If the value of the score doesn't change for 5 consecutive tries, we break the loop and take the last value of $\varepsilon$ as our left border. Last but not least, if the new score is smaller than the old score (line~\ref{findregion:scoresmaller}), we found the left border and can continue searching for the right border (indicated by the dots in the pseudo-code).
 
-  \begin{equation} \label{eq:bic}
-  BIC(A | S[n]) := log(P_A(S[n])) - 1/2 | A | log(N)
-  \end{equation}
-
-In this formula, $|A|$ depicts the size of A and $N = \sum l_i$ is the total size of the data.
-
-\begin{algorithm}[H]
+\begin{algorithm}[h]
 \caption{Find $\varepsilon$-region}\label{alg:findregion}
 \begin{algorithmic}[1]
 \item \textbf{Input:} the DFFA
@@ -693,6 +693,12 @@ In this formula, $|A|$ depicts the size of A and $N = \sum l_i$ is the total siz
 \State \Return \textit{region\_right, region\_left}
 \end{algorithmic}
 \end{algorithm}
+
+\paragraph{BIC Score} This is a measure that can be used to evaluate the learned model. It creates a score that is calculated on the likelihood minus a penalty term for the model complexity. The BIC score of a given DLMC A given data $S[n]$ is defined in formula~\ref{eq:bic}. Here, $|A|$ depicts the size of A and $N = \sum l_i$ is the total size of the data.
+
+\begin{equation} \label{eq:bic}
+  BIC(A | S[n]) := log(P_A(S[n])) - 1/2 | A | log(N)
+\end{equation}
 
 Table~\ref{table:region} shows the values of the left and right border of $\varepsilon$. The algorithm ran only once for the left border ($\varepsilon$ startes with 1 and is halfed every run) and 5 times for the right border, since the scores always stayed the same. Table~\ref{table:bicscores} shows the BIC scores and table~\ref{table:epsilonvalues} shows the corresponding $\varepsilon$ values. For example, we calculated the BIC score for $\varepsilon = 0.5$ and the result was $-1.5769e+03$.
 
@@ -800,7 +806,7 @@ If it happens that the score of f1 and f2 is exactly the same, we need to make s
 
 \subsubsection{Merging }
 
-After having calculated a good $\alpha$ value, we can finally start the AALERGIA algorithm. RED is a set of states, that is already revised, whereas BLUE is the set of states that we need to look at. The RED set starts with the initial state (line~\ref{aalergia:redstart}) and BLUE gets all its successors (line~\ref{aalergia:bluestart}). After that, we loop through all the elements of BLUE and check if we can merge it with the AALERGIA\_compatible criterion (line~\ref{aalergia:criterion}). If the states are compatible, we can merge them and the tree becomes smaller, if not, we promote the state to the RED set (line~\ref{aalergia:promote}) and exclude it from the BLUE set (line~\ref{aalergia:excludeblue}). In the end, we get a merged DFFA with a good BIC score. Further details on the AALERGIA\_compatible criterion can be found at \cite{Mao.}
+After having calculated a good $\alpha$ value, we can finally start the \emph{AALERGIA} algorithm. RED is a set of states, that is already revised, whereas BLUE is the set of states that we need to look at. The RED set starts with the initial state (line~\ref{aalergia:redstart}) and BLUE gets all its successors (line~\ref{aalergia:bluestart}). After that, we loop through all the elements of BLUE and check if we can merge it with the AALERGIA\_compatible criterion (line~\ref{aalergia:criterion}). If the states are compatible, we can merge them and the tree becomes smaller, if not, we promote the state to the RED set (line~\ref{aalergia:promote}) and exclude it from the BLUE set (line~\ref{aalergia:excludeblue}). In the end, we get a merged DFFA with a good BIC score. Further details on the AALERGIA\_compatible criterion can be found at \cite{Mao.}
 
 \begin{algorithm}[H]
 \caption{AALERGIA}\label{alg:aalergia}
@@ -840,20 +846,16 @@ After having calculated a good $\alpha$ value, we can finally start the AALERGIA
 \end{algorithmic}
 \end{algorithm}
 
-\subsubsection{Perplexity}
-\me{do i need to add this or can i remove it?}
-
-
 %%% Section RELATED WORK
 \newpage
 \section{Related Work}
 This section summarizes previous and existing approaches in science, which are relevant to this paper. Furthermore, the previously mentioned PAutomaC competition, which was conducted online and focussed on learning of probabilistic automatons, is described and the implementations of the three best teams are presented.
 
 \subsection{Probabilistic machine learning}
-In order to learn probabilistic models, which are perfectly suited for learning real systems in a physical environment, Sen et al.~\cite{Sen2004} adapted the algorithm of \cite{Carrasco.1994} and presented a novel approach for learning continuous time Markov chain models. However, one limitation of their work is that the algorithm doesn't scale up for large underlying blackbox models. Mao et al.~\cite{Mao.} wrote the paper that presented AALERGIA and proved a strong theoretical and experimental consistency with their results. One year later, Mao et al.~\cite{Mao.2012} wrote a paper about learning Markov decision processes for model checking, however, their results need further research, as the algorithm is not suitable for routine use yet.
+In order to learn probabilistic models, which are perfectly suited for learning real systems in a physical environment, Sen et al.~\cite{Sen2004} adapted the algorithm of \cite{Carrasco.1994} and presented a novel approach for learning continuous time Markov chain models. However, one limitation of their work is that the algorithm doesn't scale up for large underlying blackbox models. Mao et al.~\cite{Mao.} wrote the paper that presented \emph{AALERGIA} and proved a strong theoretical and experimental consistency with their results. One year later, Mao et al.~\cite{Mao.2012} wrote a paper about learning Markov decision processes for model checking, however, their results need further research, as the algorithm is not suitable for routine use yet.
 
 \subsection{Model checking}
-Model checking is used to make sure that certain properties hold in a given model of a system. It is used for exhaustive and automatic verification of a property in a finite state system. PRISM \me{citation!} model checker has been used for model checking for many network protocols successfully: Duflot et al.~\cite{DKNP06} used probabilistic model checking to compute the performance of different device discovery scenarios in the Bluetooth wireless communication protocol. They managed to perform an exhaustive low level analysis and examined the run times (best and worst) of the protocol, but were limited by the size of the probabilistic models that were needed. In order to cope with this problem, combination with simulation or abstraction and symmetry reduction methods are proposed.
+Model checking is used to make sure that certain properties hold in a given model of a system. It is used for exhaustive and automatic verification of a property in a finite state system. PRISM model checker has been used for model checking for many network protocols successfully: Duflot et al.~\cite{DKNP06} used probabilistic model checking to compute the performance of different device discovery scenarios in the Bluetooth wireless communication protocol. They managed to perform an exhaustive low level analysis and examined the run times (best and worst) of the protocol, but were limited by the size of the probabilistic models that were needed. In order to cope with this problem, combination with simulation or abstraction and symmetry reduction methods are proposed.
 Kwiatkowska et al.~\cite{KNSW07} performed probabilistic model checking techniques on the CSMA/CD communication protocol and the IEEE1394 FireWire root contention protocol. They give an overview about probabilistic temporal-logic properties of wireless networks~\cite{KNP09a}.
 Matthias Fruth~\cite{Fru06} modelled the IEEE 802.15.4 standard in PRISM model checker and verified correctness properties, like the successful transmission or the amount of collisions, on it.
 
@@ -867,24 +869,22 @@ The winning team Shibata Yoshinaka~\cite{Shibata_the11th} obtained the best perp
 
 \me{The continue the discussion on SHIBATA and why it is winning every major contest in this field  PAutomataC 2012, CONTEST 2016.}
 
-\newpage
 \section{Implementation of the AALERGIA algorithm in python}
 
 
 \section{Implementation of the IEEE 802.15.4 PRISM model}
-In order to test our implementation of AALERGIA in python, we decided to learn a simple model of the IEEE 802.15.4 unslotted protocol. The concept of the model was taken from the paper of Wu et al.~\cite{stability}, but the PRISM model was implemented by us. The model originally was considered to be a probabilistic timed automaton (PTA). However, since PRISM model checker only provides limited support for PTAs, we cannot generate traces out of them. Fortunately, there is a way around that issue. It is possible to convert the PTA to a finite state Markov decision process, using the digital clocks approach presented in the paper of Kwiatkowska et al.~\cite{KNPS06}.
+In order to test our implementation of \emph{AALERGIA} in python, we decided to learn a simple model of the IEEE 802.15.4 unslotted protocol. The concept of the model was taken from the paper of Wu et al.~\cite{stability}, but the PRISM model was implemented by us. The model originally was considered to be a probabilistic timed automaton (PTA). However, since PRISM model checker only provides limited support for PTAs, we cannot generate traces out of them. Fortunately, there is a way around that issue. It is possible to convert the PTA to a finite state Markov decision process, using the digital clocks approach presented in the paper of Kwiatkowska et al.~\cite{KNPS06}.
 
 A wireless network control system (WNCS) with two sending modules and one channel module in parallel composition is considered. The two sending modules start their sending process at the same time. They access the channel according to the unslotted CSMA/CA protocol. The protocol uses a mechanism called exponential backoff. A sender listens to the channel before sending. If the channel is busy, it waits a random amount of time, before attempting to send again. Since we are modelling a MDP, we need to work with discrete time. The smallest unit of time in our model is balled backoff period \textit{T\textsubscript{b}}. If the sender wants to send a packet, it needs to initialise the variables \textit{NB} and \textit{BE}. Each sender might have different \textit{BE} and \textit{NB} values during its sending process. \textit{NB} denotes the number of times a backoff was required (due to a busy channel). The upper bound is called \textit{NB\textsubscript{max}}. \textit{BE} describes the backoff-exponent and is related to the random amount of time the sender waits before it attempts to listen to the channel again. \textit{BE} is initially set to \textit{BE\textsubscript{min}} and the upper bound is \textit{BE\textsubscript{max}}.
 
-Figure~\ref{IEEE802:pdf} shows, how the sender (a) and the channel (b) are modelled.
+Figure~\ref{IEEE802:pdf} \cite{stability} shows, how the sender (a) and the channel (b) are modelled.
 
 \begin{figure}[ht!]
   \centering
 \includegraphics[page=1]{data/stability_cropped.pdf}
-\caption{The concept of the sender and the channel}
+\caption{The concept of the sender and the channel (Source: Wu et al., 2014)}
 \label{IEEE802:pdf}
 \end{figure}
-\me{CITE THE IMAGE CORRECTLY}
 
 The sender starts by setting the backoff time, which is discrete and chosen randomly between 0\textit{T\textsubscript{B}} and ($2^{BE_{min}} - 1$)\textit{T\textsubscript{B}}. After that, it enters a state where it waits for the backoff time to expire. Next, the sender listens to the channel, this takes \textit{T\textsubscript{CCA}} time. From there on, three transitions can be taken. If the channel is busy and the number of backoff times \textit{NB} is equal to \textit{NB\textsubscript{max}}, the module ends in the state \textit{FAILURE} and stays there. However, if the channel is busy but \textit{NB} is smaller than \textit{NB\textsubscript{max}}, the sending module starts with its first state again. Additionally, \textit{BE} is increased by one, which increases the chance for a longer backoff time. \textit{NB} is also increased by one, noting that one more backoff attempt is started. Last but not least, if the channel is idle, the sender can start sending the packet. Once the process is finished, it remains in the state \textit{DONE}.
 
@@ -983,7 +983,7 @@ endmodule
 
 \newpage
 \section{Generating traces of the model and learning the model with AALERGIA}
-In order to generate traces out of the PRISM model we mentioned in the previous section, some reflections need to be done. It is especially important to think about how the states can be represented in the traces and how the alphabet looks like. The level of detail can be abstracted or more refined. For the final model, the discrete time Markov chain created by AALERGIA, only the time steps in the MDP are essential. This allows us to filter all the steps in the traces, that are not related to changes in time.
+In order to generate traces out of the PRISM model we mentioned in the previous section, some reflections need to be done. It is especially important to think about how the states can be represented in the traces and how the alphabet looks like. The level of detail can be abstracted or more refined. For the final model, the discrete time Markov chain created by \emph{AALERGIA}, only the time steps in the MDP are essential. This allows us to filter all the steps in the traces, that are not related to changes in time.
 
 When we look at our system, only the states of the two senders and the state of the channel is of importance. This is represented by a symbol that depicts the state of the first sender, the state of the second sender, the channel condition 1 and the channel condition 2 in a row. Every symbol stands for a time step and all the symbols in a trace are seperated by commas. A random example of these traces is shown in table~\ref{table:tracemodel}. For instance, a symbol like \textit{1301} shows, that sender 1 is in state 1, sender 2 is in state 3, channel condition 1 is in state 0 and channel condition 2 is in state 1. If we look at our model, this means, that sender 2 is sending and sender 1 is waiting.
 
@@ -1003,7 +1003,7 @@ When we look at our system, only the states of the two senders and the state of 
 \label{table:tracemodel}
 \end{table}
 
-In order to create the DTMC, AALERGIA needs an alphabet as well. The full alphabet contains all the symbols that can occur in the traces and is contained in a seperate file. An example is given in table~\ref{table:alphmodel}.
+In order to create the DTMC, \emph{AALERGIA} needs an alphabet as well. The full alphabet contains all the symbols that can occur in the traces and is contained in a seperate file. An example is given in table~\ref{table:alphmodel}.
 
 \begin{table}[ht!]
 \centering
@@ -1033,22 +1033,24 @@ In order to create the DTMC, AALERGIA needs an alphabet as well. The full alphab
 
 
 \section{Evaluation}
-\me{descirbe the value of sample period, describe the PR measure, describe the random packet length...}
-\me{how well did the idea work? experimental setup, results...}
-
-
-After learning the DTMC model with AALERGIA, the results need to be compared by model checking. The initial question Wu et al.~\cite{stability} tried to answer with probabilistic model checking was, whether the network is stable or not. For this reason, they defined the minimum probability they are interested in as follows:
+After learning the DTMC model with \emph{AALERGIA}, the results need to be compared by model checking. The initial question Wu et al.~\cite{stability} tried to answer with probabilistic model checking was, whether the network is stable or not. For this reason, they defined the minimum probability they are interested in as follows:
 \begin{itemize}
   \item \textit{PR = The minimum probability of both stations successfully transmitting their packets within one sampling period}
 \end{itemize}
 
 This can be checked by satisfying the stability specification:
+
 \begin{itemize}
   \item $\mathcal{P}_{\geq1-p}$ [true $\mathcal{U}$ (done1 $\land$ done2 $\land$ z $\leq$h)]
 \end{itemize}
 
-We compared the minimum probability Wu et al. with their setup got as a result to the result we got with our model and after we applied ALLERGIA on the DTMC.
+In the following case, we set \textit{h} (the sampling period) to 80\textit{T\textsubscript{B}}. \textit{z} depicts the clock, \textit{done1} and \textit{done2} says that sender 1 and sender 2 have finished sending the packet successfully. The specification above essentially expresses \textit{PR} in PLTL. The packet length is set non deterministically between 20-30\textit{T\textsubscript{B}}.
 
+Figures \ref{fig:bemin}-\ref{fig:nbmax} show the different test setups and their corresponding results. In each graph, a different parameter of the IEEE 802.15.4 PRISM model is changed. After that, the model is learned and the results are compared. PTA stands for the model Wu et al. created and published in their paper, MDP stands for the model that we build from their paper and DTMC stands for the learned model with \emph{AALERGIA}.
+
+Figure~\ref{fig:bemin} shows how changing \textit{BE\textsubscript{min}} affects the stability of the network, while $BE_{max}=5$ and $NB_{max}=4$. As Wu et al. stated before, the maximum \textit{PR} is achieved when $BE_{min}=3$. The reason for that is simple, if $BE_{min}$ is small, the backoff time will be short and it is very likely that the channel is still busy when trying to send again. Therefore, it is more likely that $NB=NB_{max}$ and the sending process failes. On the other hand, if \textit{BE\textsubscript{min}} is too large, it is more likely that the process cannot finish sending in the given timeframe.
+
+\begin{figure}[H]
 \centering
 	\begin{tikzpicture}
 		\begin{axis}[ymin=0, xlabel={BE\textsubscript{min}}, ylabel={PR}, legend entries={PTA,MDP,DTMC}, legend style={at={(1,1)},anchor=north west,nodes=right}]
@@ -1057,7 +1059,14 @@ We compared the minimum probability Wu et al. with their setup got as a result t
             \addplot table {data/be_min_learned.csv};
 		\end{axis}
 	\end{tikzpicture}
+ \caption{The results while changing \textit{BE\textsubscript{min}}}
+  \label{fig:bemin}
+\end{figure}
 
+Figure~\ref{fig:bemax} indicates how \textit{PR} changes, if \textit{BE\textsubscript{max}} is modified and $BE_{min}=3$ and $NB_{max}=4$. The situation is similar to figure~\ref{fig:bemin}.
+
+\begin{figure}[H]
+\centering
 	\begin{tikzpicture}
 		\begin{axis}[ymin=0, xlabel={BE\textsubscript{max}}, xtick={3,4,5,6}, ylabel={PR}, legend entries={PTA,MDP,DTMC}, legend style={at={(1,1)},anchor=north west,nodes=right}]
 			\addplot table {data/be_max_paper.csv};
@@ -1065,7 +1074,14 @@ We compared the minimum probability Wu et al. with their setup got as a result t
             \addplot table {data/be_max_learned.csv};
 		\end{axis}
 	\end{tikzpicture}
+ \caption{The results while changing \textit{BE\textsubscript{max}}}
+    \label{fig:bemax}
+\end{figure}
 
+In the last plot (figure~\ref{fig:nbmax}), we altered \textit{NB\textsubscript{max}}, with $BE_{min}=3$ and $BE_{max}=5$. When \textit{NB\textsubscript{max}} is small, the maximum number of retries are reached very fast and the sending process fails. However, if \textit{NB\textsubscript{max}} gets larger, \textit{PR} levels off quickly, because there is still the time limit.
+
+\begin{figure}[H]
+\centering
 	\begin{tikzpicture}
 		\begin{axis}[ymin=0, xlabel={NB\textsubscript{max}}, ylabel={PR}, legend entries={PTA,MDP,DTMC}, legend style={at={(1,1)},anchor=north west,nodes=right}]
 			\addplot table {data/nb_max_paper.csv};
@@ -1073,10 +1089,17 @@ We compared the minimum probability Wu et al. with their setup got as a result t
 			\addplot table {data/nb_max_learned.csv};
 		\end{axis}
 	\end{tikzpicture}
+ \caption{The results while changing \textit{NB\textsubscript{max}}}
+   \label{fig:nbmax}
+\end{figure}
 
-\newpage
+The DTMCs we created with \emph{AALERGIA} were learned from 300 traces of the original MDP models. It took us between 3-6 minutes to get the result, however, the learned  models consist of many more states than the original models (400-500 compared to 20), because we suffer from state-space explosion.
+
 \section{Conclusions}
-\me{the approach is good; but! state advantages and disadvantages, no new infos!}
+The approach showed good results, but we suffer from state space explosion. One way to deal with that is to sample the DTMC and get a smaller model as a result. Another possible improvement would also be to enhance the result by active learning. If we take advantage of the data acquisition, we can get more useful traces and thus the learned automaton will be more accurate. We can also prevent the fact, that if some behaviour in the model is never executed, it is impossible to learn the right model. Active learning takes care of that problem, as it allows us to trigger any possible behaviour of the system.
+
+\me{continue to write the conclusion}
+research further the topic on abstraction (different models support different views of the system)
 
 \appendix
  \bibliographystyle{ieeetr}
