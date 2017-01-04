@@ -8,3 +8,6 @@ source/Thumbs.db
 *.toc
 *.lot
 *.bbl
+*.tmp
+paper/notes/~$dia.ods
+paper/notes/~$tes during process.docx
