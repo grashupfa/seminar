@@ -1,2 +1,6 @@
-Pmin=? [ true U (s=4 & s2=4 & t<=SAMPLING_TIME) ]
+Pmin=? [ true U (s=4&s2=4&t<=SAMPLING_TIME) ]
+
+Pmin=? [ true U (c1=2&c2=2) ]
+
+Pmin=? [ true U (c1=3&c2=3&t<=SAMPLING_TIME) ]
 

@@ -7,8 +7,8 @@ mdp
 //--------------------------------------------------------------------------------------------
 // CONSTANTS
 const int NB_MAX = 4; // Number of Backoff Times Maximum
-const int BE_MIN; // Backoff Exponent Minimum
-const int BE_MAX = 5;// Backoff Exponent Maximum
+const int BE_MIN = 3;// Backoff Exponent Minimum
+const int BE_MAX;// Backoff Exponent Maximum
 const int SAMPLING_TIME = 80; // Deadline, everything must be finished within 1 sampling period
 const int TB = 1; // This is the Basic Unit (320us)
 const int TCCA = TB;
@@ -18,6 +18,9 @@ formula BOFF_DELAY_MAX = pow(2, BE_MAX)-1;
 
 formula ch_busy = c1>0 | c2>0;
 formula ch_free = c1=0 & c2=0;
+
+formula ch_busy2 = c1>0 | c2>0;
+formula ch_free2 = c1=0 & c2=0;
 
 //--------------------------------------------------------------------------------------------
 // CHANNEL 
@@ -206,20 +209,20 @@ module sender1
 	[] s=2 & x = TCCA & ch_busy & NB = NB_MAX  -> (s'=5); // Max tries reached -> go to failed and stay there
 
 	// Move to next state, set nondeterministic data_length
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-10); // Channel free -> go to send
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-9); 
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-8); 
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-7); 
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-6); 
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-5); 
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-4); 
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-3); 
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-2); 
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-1); 
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-0); 
+	[send1] s=2 & x = TCCA & ch_free & NB < NB_MAX-> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-10); // Channel free -> go to send
+	[send1] s=2 & x = TCCA & ch_free & NB < NB_MAX -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-9); 
+	[send1] s=2 & x = TCCA & ch_free & NB < NB_MAX -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-8); 
+	[send1] s=2 & x = TCCA & ch_free & NB < NB_MAX -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-7); 
+	[send1] s=2 & x = TCCA & ch_free & NB < NB_MAX -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-6); 
+	[send1] s=2 & x = TCCA & ch_free & NB < NB_MAX -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-5); 
+	[send1] s=2 & x = TCCA & ch_free & NB < NB_MAX -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-4); 
+	[send1] s=2 & x = TCCA & ch_free & NB < NB_MAX -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-3); 
+	[send1] s=2 & x = TCCA & ch_free & NB < NB_MAX -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-2); 
+	[send1] s=2 & x = TCCA & ch_free & NB < NB_MAX -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-1); 
+	[send1] s=2 & x = TCCA & ch_free & NB < NB_MAX -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-0); 
 
 	[time] s=3 & x < DATA_LENGTH -> (x'=min(x+1,SAMPLING_TIME)); // Wait for time passed (DATA_LENGTH) -> sending packet
-	[finish1] s=3 & x = DATA_LENGTH & c1 = 1 -> (s'=4); // only if c1 is still 1
+	[finish1] s=3 & x = DATA_LENGTH & ch_busy -> (s'=4);
 
 	[time] s = 4 -> (s'=4); // FINISHED, stay here
 
@@ -228,7 +231,7 @@ endmodule
 
 //--------------------------------------------------------------------------------------------
 // SENDER 2
-module sender2=sender1[NB=NB2, BE=BE2, BOFF_DELAY = BOFF_DELAY2, s=s2, x=x2, send1=send2, finish1=finish2, c1=c2, c2=c1, DATA_LENGTH = DATA_LENGTH2] endmodule
+module sender2=sender1[NB=NB2, BE=BE2, BOFF_DELAY = BOFF_DELAY2, s=s2, x=x2, send1=send2, finish1=finish2, DATA_LENGTH = DATA_LENGTH2] endmodule
 
 // timer
 module timer
