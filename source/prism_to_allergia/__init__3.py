@@ -13,18 +13,18 @@ def RepresentsInt(s):
 
 final_string_list = [];
 
-for i in range (0, 2000):
+for i in range (0, 600):
     
     print("round...%d",i);
 
-    p = subprocess.Popen("prism.bat IEEE_802.15.4_protocol.prism -simpath 1000,vars=(s,s2,c1,c2,t),sep=comma stdout", stdout=subprocess.PIPE);
+    p = subprocess.Popen("prism.bat IEEE_802.15.4_protocol.prism -simpath 700,vars=(s,s2,c1,c2,NB,NB2,t),sep=comma stdout", stdout=subprocess.PIPE);
     stdout, stderr = p.communicate();
     
     string = stdout.decode("utf-8");
     split_str = string.split(",");
     
     list_begin = 0;
-    final_string = "0_0_0_0_0_0,";
+    final_string = "0_0_0_0_0_0_0_0,";
     
     for i in range(0, len(split_str)):
         if (list_begin > 0):
@@ -40,7 +40,7 @@ for i in range (0, 2000):
             list_begin = list_begin -1;
                 
         if ("time" in split_str[i]):
-            list_begin = 6;          
+            list_begin = 8;          
             
     final_string_list.append(final_string);
         
@@ -60,7 +60,7 @@ for i in range(0, len(final_string_list)):
         states = split_string_sub.split("_");
         
         if (len(states)>2):
-            new_split_string += states[1]+states[2]+states[3]+states[4]+",";
+            new_split_string += states[1]+states[2]+states[3]+states[4]+states[5]+states[6]+",";
         
         
     w.writerow(new_split_string.split(','));
@@ -80,7 +80,7 @@ for i in range(0, len(final_string_list)):
         states = split_string_sub.split("_");
         
         if (len(states)>2):
-            string_concat = states[1]+states[2]+states[3]+states[4];
+            string_concat = states[1]+states[2]+states[3]+states[4]+states[5]+states[6];
             
             if (string_concat not in written_strings):
                 target.write(string_concat);

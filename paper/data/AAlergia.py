@@ -1,11 +1,3 @@
-import numpy as np
-import dffa
-import copy
-from findall import findall
-from calculate_compatible_parameter import calculate_compatible_parameter
-from AAlergia_compatible import AAlergia_compatible
-from AAlergia_merge import AAlergia_merge
-
 def AALERGIA(dffa, alpha,dpfa_orig):
     dffa_merged = copy.deepcopy(dffa)
     initial_state = dffa.initial_state

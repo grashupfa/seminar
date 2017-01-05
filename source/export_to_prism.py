@@ -65,7 +65,7 @@ def export_to_prism(dffa):
         if len(ind) == 0:
             continue;
 
-        f.write('label "%s" = s=%d' % (alp[i],ind[0]));
+        f.write('label "c%s" = s=%d' % (alp[i],ind[0]));
         for j in range (1, len(ind)):
             f.write('|s=%d' % (ind[j]));
             

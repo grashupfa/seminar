@@ -7,8 +7,8 @@ mdp
 //--------------------------------------------------------------------------------------------
 // CONSTANTS
 const int NB_MAX = 4; // Number of Backoff Times Maximum
-const int BE_MIN = 3; // Backoff Exponent Minimum
-const int BE_MAX = 6;// Backoff Exponent Maximum
+const int BE_MIN = 3;// Backoff Exponent Minimum
+const int BE_MAX = 3;// Backoff Exponent Maximum
 const int SAMPLING_TIME = 80; // Deadline, everything must be finished within 1 sampling period
 const int TB = 1; // This is the Basic Unit (320us)
 const int TCCA = TB;
@@ -29,19 +29,19 @@ formula ch_free2 = c1=0 & c2=0;
 // if one of them is sending, the condition changes to 1
 // if there is a collision, the condition changes to 2
 module channel
-	c1 : [0..2] init 0;
-	c2 : [0..2] init 0;
+    c1 : [0..2] init 0;
+    c2 : [0..2] init 0;
 
-	[send1] c1=0 & c2=0 -> (c1'=1);
-	[send2] c2=0 & c1=0 -> (c2'=1);
+    [send1] c1=0 & c2=0 -> (c1'=1);
+    [send2] c2=0 & c1=0 -> (c2'=1);
 
-	// check if something is sent -> collision!
-	[send1] c1=0 & c2>0 -> (c1'=2) & (c2'=2);
-	[send2] c2=0 & c1>0 -> (c1'=2) & (c2'=2);
+    // check if something is sent -> collision!
+    [send1] c1=0 & c2>0 -> (c1'=2) & (c2'=2);
+    [send2] c2=0 & c1>0 -> (c1'=2) & (c2'=2);
 
-	// message was sent and channel is clear again
-	[finish1] c1>0 -> (c1'=0);
-	[finish2] c2>0 -> (c2'=0);
+    // message was sent and channel is clear again
+    [finish1] c1>0 -> (c1'=0);
+    [finish2] c2>0 -> (c2'=0);
 endmodule
 
 //--------------------------------------------------------------------------------------------
@@ -49,184 +49,184 @@ endmodule
 
 module sender1
 
-	NB : [0..NB_MAX] init 0; // Number of backoff times
-	BE : [0..BE_MAX] init BE_MIN; // Backoff exponent
-	BOFF_DELAY : [0..BOFF_DELAY_MAX];
+    NB : [0..NB_MAX] init 0; // Number of backoff times
+    BE : [0..BE_MAX] init BE_MIN; // Backoff exponent
+    BOFF_DELAY : [0..BOFF_DELAY_MAX];
 
-	DATA_LENGTH : [0..DATA_LENGTH_MAX] init DATA_LENGTH_MAX;
+    DATA_LENGTH : [0..DATA_LENGTH_MAX] init DATA_LENGTH_MAX;
 
-	s : [0..5] init 0; // location
-	// 0 : SET BACKOFF TIME
-	// 1 : BACKOFF
-	// 2 : CCA
-	// 3 : DATA TRANSMISSION
-	// 4 : DONE
-	// 5 : FAILED
+    s : [0..5] init 0; // location
+    // 0 : SET BACKOFF TIME
+    // 1 : BACKOFF
+    // 2 : CCA
+    // 3 : DATA TRANSMISSION
+    // 4 : DONE
+    // 5 : FAILED
 
-	x : [0..SAMPLING_TIME] init 0; // digital clock, unit is Tb
+    x : [0..SAMPLING_TIME] init 0; // digital clock, unit is Tb
 
 
-	[] s = 0 & BE=1 -> (1/2):(s'=1) & (BOFF_DELAY'= 0) + // BE = 1, 2^(1)-1 = 1 --> case for BE = BE_MIN
-			   (1/2):(s'=1) & (BOFF_DELAY'= 1);
+    [] s = 0 & BE=1 -> (1/2):(s'=1) & (BOFF_DELAY'= 0) + // BE = 1, 2^(1)-1 = 1 --> case for BE = BE_MIN
+               (1/2):(s'=1) & (BOFF_DELAY'= 1);
 
-	[] s = 0 & BE=2 -> (1/4):(s'=1) & (BOFF_DELAY'= 0) + // BE = 2, 2^(2)-1 = 3 --> case for BE = BE_MIN
-			   (1/4):(s'=1) & (BOFF_DELAY'= 1) +
-			   (1/4):(s'=1) & (BOFF_DELAY'= 2) +
+    [] s = 0 & BE=2 -> (1/4):(s'=1) & (BOFF_DELAY'= 0) + // BE = 2, 2^(2)-1 = 3 --> case for BE = BE_MIN
+               (1/4):(s'=1) & (BOFF_DELAY'= 1) +
+               (1/4):(s'=1) & (BOFF_DELAY'= 2) +
                            (1/4):(s'=1) & (BOFF_DELAY'= 3);
 
-	[] s = 0 & BE=3 -> (1/8):(s'=1) & (BOFF_DELAY'= 0) + // BE = 3, 2^(3)-1 = 7  --> case for BE = BE_MIN
-			   (1/8):(s'=1) & (BOFF_DELAY'= 1) +
-			   (1/8):(s'=1) & (BOFF_DELAY'= 2) +
+    [] s = 0 & BE=3 -> (1/8):(s'=1) & (BOFF_DELAY'= 0) + // BE = 3, 2^(3)-1 = 7  --> case for BE = BE_MIN
+               (1/8):(s'=1) & (BOFF_DELAY'= 1) +
+               (1/8):(s'=1) & (BOFF_DELAY'= 2) +
                            (1/8):(s'=1) & (BOFF_DELAY'= 3) +
                            (1/8):(s'=1) & (BOFF_DELAY'= 4) +
-			   (1/8):(s'=1) & (BOFF_DELAY'= 5) +
+               (1/8):(s'=1) & (BOFF_DELAY'= 5) +
                            (1/8):(s'=1) & (BOFF_DELAY'= 6) +
                            (1/8):(s'=1) & (BOFF_DELAY'= 7);
 
-	[] s = 0 & BE=4 -> (1/16):(s'=1) & (BOFF_DELAY'= 0) + // BE = 4, 2^(4)-1 = 15
-			   (1/16):(s'=1) & (BOFF_DELAY'= 1) +
-			   (1/16):(s'=1) & (BOFF_DELAY'= 2) +
+    [] s = 0 & BE=4 -> (1/16):(s'=1) & (BOFF_DELAY'= 0) + // BE = 4, 2^(4)-1 = 15
+               (1/16):(s'=1) & (BOFF_DELAY'= 1) +
+               (1/16):(s'=1) & (BOFF_DELAY'= 2) +
                            (1/16):(s'=1) & (BOFF_DELAY'= 3) +
                            (1/16):(s'=1) & (BOFF_DELAY'= 4) +
-			   (1/16):(s'=1) & (BOFF_DELAY'= 5) +
+               (1/16):(s'=1) & (BOFF_DELAY'= 5) +
                            (1/16):(s'=1) & (BOFF_DELAY'= 6) +
                            (1/16):(s'=1) & (BOFF_DELAY'= 7) +
                            (1/16):(s'=1) & (BOFF_DELAY'= 8) +
                            (1/16):(s'=1) & (BOFF_DELAY'= 9) +
-			   (1/16):(s'=1) & (BOFF_DELAY'= 10) +
+               (1/16):(s'=1) & (BOFF_DELAY'= 10) +
                            (1/16):(s'=1) & (BOFF_DELAY'= 11) +
                            (1/16):(s'=1) & (BOFF_DELAY'= 12) +
                            (1/16):(s'=1) & (BOFF_DELAY'= 13) +
                            (1/16):(s'=1) & (BOFF_DELAY'= 14) +
-			   (1/16):(s'=1) & (BOFF_DELAY'= 15);
+               (1/16):(s'=1) & (BOFF_DELAY'= 15);
 
-	[] s = 0 & BE=5 -> (1/32):(s'=1) & (BOFF_DELAY'= 0) + // BE = 5, 2^(5)-1 = 31  --> case for BE = BE_MAX
-			   (1/32):(s'=1) & (BOFF_DELAY'= 1) +
-			   (1/32):(s'=1) & (BOFF_DELAY'= 2) +
+    [] s = 0 & BE=5 -> (1/32):(s'=1) & (BOFF_DELAY'= 0) + // BE = 5, 2^(5)-1 = 31  --> case for BE = BE_MAX
+               (1/32):(s'=1) & (BOFF_DELAY'= 1) +
+               (1/32):(s'=1) & (BOFF_DELAY'= 2) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 3) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 4) +
-			   (1/32):(s'=1) & (BOFF_DELAY'= 5) +
+               (1/32):(s'=1) & (BOFF_DELAY'= 5) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 6) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 7) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 8) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 9) +
-			   (1/32):(s'=1) & (BOFF_DELAY'= 10) +
+               (1/32):(s'=1) & (BOFF_DELAY'= 10) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 11) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 12) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 13) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 14) +
-			   (1/32):(s'=1) & (BOFF_DELAY'= 15) +
+               (1/32):(s'=1) & (BOFF_DELAY'= 15) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 16) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 17) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 18) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 19) +
-			   (1/32):(s'=1) & (BOFF_DELAY'= 20) +
+               (1/32):(s'=1) & (BOFF_DELAY'= 20) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 21) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 22) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 23) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 24) +
-			   (1/32):(s'=1) & (BOFF_DELAY'= 25) +
- 			   (1/32):(s'=1) & (BOFF_DELAY'= 26) +
+               (1/32):(s'=1) & (BOFF_DELAY'= 25) +
+               (1/32):(s'=1) & (BOFF_DELAY'= 26) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 27) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 28) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 29) +
-			   (1/32):(s'=1) & (BOFF_DELAY'= 30) +
+               (1/32):(s'=1) & (BOFF_DELAY'= 30) +
                            (1/32):(s'=1) & (BOFF_DELAY'= 31);
 
 
-	[] s = 0 & BE=6 -> (1/64):(s'=1) & (BOFF_DELAY'= 0) + // BE = 5, 2^(5)-1 = 31  --> case for BE = BE_MAX
-			   (1/64):(s'=1) & (BOFF_DELAY'= 1) +
-			   (1/64):(s'=1) & (BOFF_DELAY'= 2) +
+    [] s = 0 & BE=6 -> (1/64):(s'=1) & (BOFF_DELAY'= 0) + // BE = 5, 2^(5)-1 = 31  --> case for BE = BE_MAX
+               (1/64):(s'=1) & (BOFF_DELAY'= 1) +
+               (1/64):(s'=1) & (BOFF_DELAY'= 2) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 3) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 4) +
-			   (1/64):(s'=1) & (BOFF_DELAY'= 5) +
+               (1/64):(s'=1) & (BOFF_DELAY'= 5) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 6) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 7) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 8) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 9) +
-			   (1/64):(s'=1) & (BOFF_DELAY'= 10) +
+               (1/64):(s'=1) & (BOFF_DELAY'= 10) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 11) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 12) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 13) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 14) +
-			   (1/64):(s'=1) & (BOFF_DELAY'= 15) +
+               (1/64):(s'=1) & (BOFF_DELAY'= 15) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 16) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 17) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 18) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 19) +
-			   (1/64):(s'=1) & (BOFF_DELAY'= 20) +
+               (1/64):(s'=1) & (BOFF_DELAY'= 20) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 21) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 22) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 23) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 24) +
-			   (1/64):(s'=1) & (BOFF_DELAY'= 25) +
- 			   (1/64):(s'=1) & (BOFF_DELAY'= 26) +
+               (1/64):(s'=1) & (BOFF_DELAY'= 25) +
+               (1/64):(s'=1) & (BOFF_DELAY'= 26) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 27) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 28) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 29) +
-			   (1/64):(s'=1) & (BOFF_DELAY'= 30) +
+               (1/64):(s'=1) & (BOFF_DELAY'= 30) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 31) +
-			   (1/64):(s'=1) & (BOFF_DELAY'= 32) +
+               (1/64):(s'=1) & (BOFF_DELAY'= 32) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 33) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 34) +
-			   (1/64):(s'=1) & (BOFF_DELAY'= 35) +
+               (1/64):(s'=1) & (BOFF_DELAY'= 35) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 36) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 37) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 38) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 39) +
-			   (1/64):(s'=1) & (BOFF_DELAY'= 40) +
+               (1/64):(s'=1) & (BOFF_DELAY'= 40) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 41) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 42) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 43) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 44) +
-			   (1/64):(s'=1) & (BOFF_DELAY'= 45) +
+               (1/64):(s'=1) & (BOFF_DELAY'= 45) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 46) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 47) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 48) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 49) +
-			   (1/64):(s'=1) & (BOFF_DELAY'= 50) +
+               (1/64):(s'=1) & (BOFF_DELAY'= 50) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 51) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 52) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 53) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 54) +
-			   (1/64):(s'=1) & (BOFF_DELAY'= 55) +
- 			   (1/64):(s'=1) & (BOFF_DELAY'= 56) +
+               (1/64):(s'=1) & (BOFF_DELAY'= 55) +
+               (1/64):(s'=1) & (BOFF_DELAY'= 56) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 57) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 58) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 59) +
-			   (1/64):(s'=1) & (BOFF_DELAY'= 60) +
+               (1/64):(s'=1) & (BOFF_DELAY'= 60) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 61) +
- 			   (1/64):(s'=1) & (BOFF_DELAY'= 62) +
+               (1/64):(s'=1) & (BOFF_DELAY'= 62) +
                            (1/64):(s'=1) & (BOFF_DELAY'= 63);
 
-	[time] s=1 & x < TB -> (x'=min(x+1,SAMPLING_TIME)); // Wait for time passed (TB)
-	[] s=1 & x = TB & BOFF_DELAY > 0 -> (s'=1) & (x'=0) & (BOFF_DELAY'=BOFF_DELAY-1); // Decrement BACKOFF-Delay -1
-	[] s=1 & x = TB & BOFF_DELAY = 0 -> (s'=2) & (x'=0);
+    [time] s=1 & x < TB -> (x'=min(x+1,SAMPLING_TIME)); // Wait for time passed (TB)
+    [] s=1 & x = TB & BOFF_DELAY > 0 -> (s'=1) & (x'=0) & (BOFF_DELAY'=BOFF_DELAY-1); // Decrement BACKOFF-Delay -1
+    [] s=1 & x = TB & BOFF_DELAY = 0 -> (s'=2) & (x'=0);
 
-	[time] s=2 & x < TCCA -> (x'=min(x+1,SAMPLING_TIME)); // Wait for time passed (TCCA)
-	
-	[] s=2 & x = TCCA & ch_busy & NB < NB_MAX  -> (x'=0) & (NB' = min(NB+1, NB_MAX)) & (BE' = min(BE+1, BE_MAX)) & (s'=0); //Go back to state 0
-	[] s=2 & x = TCCA & ch_busy & NB = NB_MAX  -> (s'=5); // Max tries reached -> go to failed and stay there
+    [time] s=2 & x < TCCA -> (x'=min(x+1,SAMPLING_TIME)); // Wait for time passed (TCCA)
+    
+    [] s=2 & x = TCCA & ch_busy & NB < NB_MAX  -> (x'=0) & (NB' = min(NB+1, NB_MAX)) & (BE' = min(BE+1, BE_MAX)) & (s'=0); //Go back to state 0
+    [] s=2 & x = TCCA & ch_busy & NB = NB_MAX  -> (s'=5); // Max tries reached -> go to failed and stay there
 
-	// Move to next state, set nondeterministic data_length
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-10); // Channel free -> go to send
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-9); 
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-8); 
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-7); 
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-6); 
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-5); 
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-4); 
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-3); 
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-2); 
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-1); 
-	[send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-0); 
+    // Move to next state, set nondeterministic data_length
+    [send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-10); // Channel free -> go to send
+    [send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-9); 
+    [send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-8); 
+    [send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-7); 
+    [send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-6); 
+    [send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-5); 
+    [send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-4); 
+    [send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-3); 
+    [send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-2); 
+    [send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-1); 
+    [send1] s=2 & x = TCCA & ch_free -> (x'=0) & (s'=3) & (DATA_LENGTH'=DATA_LENGTH_MAX-0); 
 
-	[time] s=3 & x < DATA_LENGTH -> (x'=min(x+1,SAMPLING_TIME)); // Wait for time passed (DATA_LENGTH) -> sending packet
-	[finish1] s=3 & x = DATA_LENGTH & ch_busy -> (s'=4);
+    [time] s=3 & x < DATA_LENGTH -> (x'=min(x+1,SAMPLING_TIME)); // Wait for time passed (DATA_LENGTH) -> sending packet
+    [finish1] s=3 & x = DATA_LENGTH & ch_busy -> (s'=4);
 
-	[time] s = 4 -> (s'=4); // FINISHED, stay here
+    [time] s = 4 -> (s'=4); // FINISHED, stay here
 
-	[time] s = 5 -> (s'=5); // FAILED, stay here
+    [time] s = 5 -> (s'=5); // FAILED, stay here
 endmodule
 
 //--------------------------------------------------------------------------------------------
@@ -236,14 +236,14 @@ module sender2=sender1[NB=NB2, BE=BE2, BOFF_DELAY = BOFF_DELAY2, s=s2, x=x2, sen
 // timer
 module timer
 
-	t : [0..SAMPLING_TIME];
-	
-	[time] t<=SAMPLING_TIME-1 -> (t'=min(t+1,SAMPLING_TIME));
-	[done] s=4 & s2=4 -> (t'=SAMPLING_TIME);
-	
+    t : [0..SAMPLING_TIME];
+    
+    [time] t<=SAMPLING_TIME-1 -> (t'=min(t+1,SAMPLING_TIME));
+    [done] s=4 & s2=4 -> (t'=SAMPLING_TIME);
+    
 endmodule
 
 
 rewards "time"
-	[time] true : 1; // 1 TB is 320us, must not exceed Sampling time
+    [time] true : 1; // 1 TB is 320us, must not exceed Sampling time
 endrewards

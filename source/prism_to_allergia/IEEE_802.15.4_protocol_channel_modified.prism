@@ -8,7 +8,7 @@ mdp
 // CONSTANTS
 const int NB_MAX = 4; // Number of Backoff Times Maximum
 const int BE_MIN = 3; // Backoff Exponent Minimum
-const int BE_MAX = 5;// Backoff Exponent Maximum
+const int BE_MAX = 3;// Backoff Exponent Maximum
 const int SAMPLING_TIME = 80; // Deadline, everything must be finished within 1 sampling period
 const int TB = 1; // This is the Basic Unit (320us)
 const int TCCA = TB;
