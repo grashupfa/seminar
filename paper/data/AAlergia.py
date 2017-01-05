@@ -1,12 +1,10 @@
 def AALERGIA(dffa, alpha,dpfa_orig):
     dffa_merged = copy.deepcopy(dffa)
-    initial_state = dffa.initial_state
-    
+    initial_state = dffa.initial_state  
     dffa_merged.RED = np.append(dffa_merged.RED, initial_state)
         
     initial_blue_states = dffa.frequency_transition_matrix[0][initial_state][:]
     initial_blue_states = initial_blue_states[np.nonzero(initial_blue_states)]
-    
     dffa_merged.BLUE = np.append(dffa_merged.BLUE, initial_blue_states)
         
     while len(dffa_merged.BLUE) > 0:
@@ -16,12 +14,10 @@ def AALERGIA(dffa, alpha,dpfa_orig):
         promote = 1
         labels = dffa.state_labels[dffa_merged.RED]
         state_labels_q_b = dffa_merged.state_labels[q_b]
-    
         label_index = findall(labels, state_labels_q_b)
         
         for i in range(0, len(label_index)):
-            q_r = dffa_merged.RED[label_index[i]]
-            
+            q_r = dffa_merged.RED[label_index[i]]    
             thresh = calculate_compatible_parameter(dffa, q_r, q_b, alpha)
             
             if (AAlergia_compatible(dffa, dpfa_orig, q_r, q_b, 1, 1, alpha, thresh)):
@@ -45,6 +41,5 @@ def AALERGIA(dffa, alpha,dpfa_orig):
                 if (difference[j] == qr_succ[i]):
                     ia = np.append(ia, qr_succ[i])
         
-        dffa_merged.BLUE = np.append(dffa_merged.BLUE, ia)   
-        
+        dffa_merged.BLUE = np.append(dffa_merged.BLUE, ia)         
     return dffa_merged

@@ -931,16 +931,9 @@ module sender1
 	NB : [0..NB_MAX] init 0;
 	BE : [0..BE_MAX] init BE_MIN;
 	BOFF_DELAY : [0..BOFF_DELAY_MAX];
-
 	DL : [0..DL_MAX] init DL_MAX;
 
 	s : [0..5] init 0; // location
-	// 0 : SET BACKOFF TIME
-	// 1 : BACKOFF
-	// 2 : CCA
-	// 3 : DATA TRANSMISSION
-	// 4 : DONE
-	// 5 : FAILED
 
 	x : [0..SAMPLING_TIME] init 0; // clock
 
@@ -977,7 +970,6 @@ module sender1
 	[finish1] s=3 & x = DATA_LENGTH & ch_busy -> (s'=4);
 
 	[time] s = 4 -> (s'=4); // FINISHED, stay here
-
 	[time] s = 5 -> (s'=5); // FAILED, stay here
 endmodule
 
@@ -1055,7 +1047,7 @@ In the following case, we set \textit{h} (the sampling period) to 80\textit{T\te
 
 Figures \ref{fig:bemin}-\ref{fig:nbmax} show the different test setups and their corresponding results. In each graph, a different parameter of the IEEE 802.15.4 PRISM model is changed. After that, the model is learned and the results are compared. PTA stands for the model Wu et al. created and published in their paper, MDP stands for the model that we build from their paper and DTMC stands for the learned model with \emph{AALERGIA}.
 
-Figure~\ref{fig:bemin} shows how changing \textit{BE\textsubscript{min}} affects the stability of the network, while $BE_{max}=5$ and $NB_{max}=4$. As Wu et al. stated before, the maximum \textit{PR} is achieved when $BE_{min}=3$. The reason for that is simple, if $BE_{min}$ is small, the backoff time will be short and it is very likely that the channel is still busy when trying to send again. Therefore, it is more likely that $NB=NB_{max}$ and the sending process failes. On the other hand, if \textit{BE\textsubscript{min}} is too large, it is more likely that the process cannot finish sending in the given timeframe.
+Figure~\ref{fig:bemin} shows how changing \textit{BE\textsubscript{min}} affects the stability of the network, while $BE_{max}=5$ and $NB_{max}=4$. As Wu et al. stated before, the maximum \textit{PR} is achieved when $BE_{min}=3$. The reason for that is simple, if $BE_{min}$ is small, the backoff time will be short and it is very likely that the channel is still busy when trying to send again. Therefore, it is more likely that $NB=NB_{max}$ and the sending process fails. On the other hand, if \textit{BE\textsubscript{min}} is too large, it is more likely that the process cannot finish sending in the given timeframe.
 
 \begin{figure}[H]
 \centering
@@ -1070,7 +1062,7 @@ Figure~\ref{fig:bemin} shows how changing \textit{BE\textsubscript{min}} affects
   \label{fig:bemin}
 \end{figure}
 
-Figure~\ref{fig:bemax} indicates how \textit{PR} changes, if \textit{BE\textsubscript{max}} is modified and $BE_{min}=3$ and $NB_{max}=4$. The situation is similar to figure~\ref{fig:bemin}.
+Figure~\ref{fig:bemax} indicates how \textit{PR} changes, if \textit{BE\textsubscript{max}} is modified and $BE_{min}=3$ and $NB_{max}=4$. The explanation is similar to figure~\ref{fig:bemin}.
 
 \begin{figure}[H]
 \centering
@@ -1085,7 +1077,7 @@ Figure~\ref{fig:bemax} indicates how \textit{PR} changes, if \textit{BE\textsubs
     \label{fig:bemax}
 \end{figure}
 
-In the last plot (figure~\ref{fig:nbmax}), we altered \textit{NB\textsubscript{max}}, with $BE_{min}=3$ and $BE_{max}=5$. When \textit{NB\textsubscript{max}} is small, the maximum number of retries are reached very fast and the sending process fails. However, if \textit{NB\textsubscript{max}} gets larger, \textit{PR} levels off quickly, because there is still the time limit.
+In the last plot (figure~\ref{fig:nbmax}), we altered \textit{NB\textsubscript{max}}, with $BE_{min}=3$ and $BE_{max}=5$. When \textit{NB\textsubscript{max}} is small, the maximum number of retries are reached very fast and the sending process fails. However, if \textit{NB\textsubscript{max}} gets larger, \textit{PR} levels off quickly, because it exceeds the timelimit. 
 
 \begin{figure}[H]
 \centering
@@ -1100,14 +1092,14 @@ In the last plot (figure~\ref{fig:nbmax}), we altered \textit{NB\textsubscript{m
    \label{fig:nbmax}
 \end{figure}
 
-The DTMCs we created with \emph{AALERGIA} were learned from 300 traces of the original MDP models. It took us between 3-6 minutes to get the result, however, the learned  models consist of many more states than the original models (400-500 compared to 20), because we suffer from state-space explosion.
+The DTMCs we created with \emph{AALERGIA} were learned from 300 traces of the original MDP models. In order to improve the accuracy, more traces should be generated and learned. It took us between 3-6 minutes to get one result, however, including the trace generation we needed 10 minutes on an Intel Core i7 Quadcore CPU @ 2.00GHz per result. The learned  models consist of many more states than the original models (400-500 compared to 20), because we suffer from state-space explosion.
 
 \section{Conclusions}
-The approach showed good results, but we suffer from state space explosion. One way to deal with that is to sample the DTMC and get a smaller model as a result. Another possible improvement would also be to enhance the result by active learning. If we take advantage of the data acquisition, we can get more useful traces and thus the learned automaton will be more accurate. We can also prevent the fact, that if some behaviour in the model is never executed, it is impossible to learn the right model. Active learning takes care of that problem, as it allows us to trigger any possible behaviour of the system.
+The approach showed good results, but we suffer from state space explosion. One way to deal with that is to sample the DTMC and get a smaller model as a result. Another possible improvement would also be to enhance the result by active learning. If we take advantage of the data acquisition, we can get more useful traces and thus the learned automaton will be more accurate. We can also prevent the fact that, if some behaviour in the model is never executed, it is impossible to learn the right model. Active learning takes care of that problem, as it allows us to trigger any possible behaviour of the system.
 
 \me{continue to write the conclusion}
 research further the topic on abstraction (different models support different views of the system)
-
+Use more traces to generate more data
 \appendix
  \bibliographystyle{ieeetr}
  \bibliography{sources}
