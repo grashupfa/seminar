@@ -153,10 +153,10 @@ a4paper,
 %%%
 %%% begin main document
 %%%
-\begin{abstract}
-  Abstract - this is used to describe the whole paper.
-  \mw{write the abstract}
-\end{abstract}
+%\begin{abstract}
+%  Abstract - this is used to describe the whole paper.
+%  \mw{write the abstract}
+%\end{abstract}
 
 
 \section{Introduction}
@@ -1032,7 +1032,7 @@ In order to create the DTMC, \emph{AALERGIA} needs an alphabet as well. The full
 
 
 \section{Evaluation}
-After learning the DTMC model with \emph{AALERGIA}, the results need to be compared by model checking. The initial question Wu et al.~\cite{stability} tried to answer with probabilistic model checking was, whether the network is stable or not. For this reason, they defined the minimum probability they are interested in as follows:
+After learning the DTMC model with \emph{AALERGIA}, the results need to be compared with model checking. The initial question Wu et al.~\cite{stability} tried to answer with probabilistic model checking was, whether the network is stable or not. For this reason, they defined the minimum probability they are interested in as follows:
 \begin{itemize}
   \item \textit{PR = The minimum probability of both stations successfully transmitting their packets within one sampling period}
 \end{itemize}
@@ -1043,7 +1043,7 @@ This can be checked by satisfying the stability specification:
   \item $\mathcal{P}_{\geq1-p}$ [true $\mathcal{U}$ (done1 $\land$ done2 $\land$ z $\leq$h)]
 \end{itemize}
 
-In the following case, we set \textit{h} (the sampling period) to 80\textit{T\textsubscript{B}}. \textit{z} depicts the clock, \textit{done1} and \textit{done2} says that sender 1 and sender 2 have finished sending the packet successfully. The specification above essentially expresses \textit{PR} in PLTL. The packet length is set non deterministically between 20-30\textit{T\textsubscript{B}}.
+In the following case, we set \textit{h} (the sampling period) to 80\textit{T\textsubscript{B}}. \textit{z} depicts the clock, \textit{done1} and \textit{done2} means that sender 1 and sender 2 have finished sending the packet successfully. The specification above essentially expresses \textit{PR} in PLTL. The packet length is set non-deterministically between 20-30\textit{T\textsubscript{B}}.
 
 Figures \ref{fig:bemin}-\ref{fig:nbmax} show the different test setups and their corresponding results. In each graph, a different parameter of the IEEE 802.15.4 PRISM model is changed. After that, the model is learned and the results are compared. PTA stands for the model Wu et al. created and published in their paper, MDP stands for the model that we build from their paper and DTMC stands for the learned model with \emph{AALERGIA}.
 
@@ -1077,7 +1077,7 @@ Figure~\ref{fig:bemax} indicates how \textit{PR} changes, if \textit{BE\textsubs
     \label{fig:bemax}
 \end{figure}
 
-In the last plot (figure~\ref{fig:nbmax}), we altered \textit{NB\textsubscript{max}}, with $BE_{min}=3$ and $BE_{max}=5$. When \textit{NB\textsubscript{max}} is small, the maximum number of retries are reached very fast and the sending process fails. However, if \textit{NB\textsubscript{max}} gets larger, \textit{PR} levels off quickly, because it exceeds the timelimit. 
+In the last plot (figure~\ref{fig:nbmax}), we altered \textit{NB\textsubscript{max}}, with $BE_{min}=3$ and $BE_{max}=5$. When \textit{NB\textsubscript{max}} is small, the maximum number of retries are reached very fast and the sending process fails. However, if \textit{NB\textsubscript{max}} gets larger, \textit{PR} levels off quickly, because it exceeds the timelimit.
 
 \begin{figure}[H]
 \centering
@@ -1092,14 +1092,11 @@ In the last plot (figure~\ref{fig:nbmax}), we altered \textit{NB\textsubscript{m
    \label{fig:nbmax}
 \end{figure}
 
-The DTMCs we created with \emph{AALERGIA} were learned from 300 traces of the original MDP models. In order to improve the accuracy, more traces should be generated and learned. It took us between 3-6 minutes to get one result, however, including the trace generation we needed 10 minutes on an Intel Core i7 Quadcore CPU @ 2.00GHz per result. The learned  models consist of many more states than the original models (400-500 compared to 20), because we suffer from state-space explosion.
+The DTMCs we created with \emph{AALERGIA} were learned from 300 traces of the original MDP models. In order to improve the accuracy, further research in the topic of sampling complexity is needed. It took us between 3-6 minutes to get one result, however, including the trace generation we needed 10 minutes on an Intel Core i7 Quadcore CPU @ 2.00GHz per result. The learned  models consist of many more states than the original models (400-500 compared to 20), because we suffer from state-space explosion.
 
 \section{Conclusions}
-The approach showed good results, but we suffer from state space explosion. One way to deal with that is to sample the DTMC and get a smaller model as a result. Another possible improvement would also be to enhance the result by active learning. If we take advantage of the data acquisition, we can get more useful traces and thus the learned automaton will be more accurate. We can also prevent the fact that, if some behaviour in the model is never executed, it is impossible to learn the right model. Active learning takes care of that problem, as it allows us to trigger any possible behaviour of the system.
+The approach generally showed good results, but in some cases, the learned model differs quite a lot (e.g. Figure~\ref{fig:bemax}, $BE_{max}=3$) from the actual model. As of now, we cannot say for sure why this is happening. In order to investigate this further, more research in future work in the topic of sampling complexity is needed. This is going to give us valuable insight into AALERGIA and its limits. We also need to further evaluate the state-space explosion that we get in the final model. One way to deal with that is to sample the DTMC and get a smaller model as a result. We could also tackle this issue by looking at the model at an higher abstraction level, which hides details, but might give us similar results with a lot less states for the learned model. Another possible improvement would also be to enhance the result with active learning. If we take advantage of the data acquisition, we can get more useful traces and thus the learned automaton will be more accurate. We can also prevent the fact that, if some behaviour in the model is never executed, it is impossible to learn the right model. Active learning takes care of that problem, as it allows us to trigger any possible behaviour of the system.
 
-\me{continue to write the conclusion}
-research further the topic on abstraction (different models support different views of the system)
-Use more traces to generate more data
 \appendix
  \bibliographystyle{ieeetr}
  \bibliography{sources}
