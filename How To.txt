@@ -1,0 +1,22 @@
+1) Load Python project in the folder "source" into your IDE
+2) AALERGIA is started with the file "_init_.py"
+3) In the folder "source/csv" are several subfolders:
+	+ craps
+	  - this is the craps game
+	+ channel_analysis_be_max_change_300
+	  - this is the channel with 300 traces and where be_max is changed
+	+ channel_analysis_be_min_change_300
+	  - this is the channel with 300 traces where be_min is changed
+	+ channel_analysis_nb_max_change_300
+	  - this is the channel with 300 traces where nb_max is changed
+4) If you want to generate a PRISM model with AALERGIA, you need to specifiy the folder in the "_init_.py" file under the variable FOLDERNAME
+5) You also need to specifiy the Modelname in the folder that you want to load
+	+ For example: name of the files are: data_channel_analysis_be_max_change_300.csv, alphabet_channel_analysis_be_max_change_300.csv
+	+ the name you have to put then is "channel_analysis_be_max_change_300" -> leave out the prefix alphabet/data and the file ending ".csv"
+	+ there is an example in the "_init_.py" file already
+6) After running the algorithm, the file "output.prism" is created
+7) Load it into Prism model checker 
+8) In each subfolder of the model files, you will fined a file called "learned_model.props", which you can load in PRISM for checking the PLTL-properties
+--------------
+Alternatively, in each subfolder there are the generated Model Files for Prism, so there is no need to run the AALERGIA algorithm. You can load them directly into PRISM
+and do some testing on it.

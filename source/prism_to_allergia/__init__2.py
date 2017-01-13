@@ -13,7 +13,7 @@ def RepresentsInt(s):
 
 final_string_list = [];
 
-for i in range (0, 2000):
+for i in range (0, 1):
     
     print("round...%d",i);
 
@@ -67,7 +67,7 @@ for i in range(0, len(final_string_list)):
 
 f.close();
 
-target = open("alphabet", 'w')
+target = open("alphabet.csv", 'w')
 
 written_strings = [];
 

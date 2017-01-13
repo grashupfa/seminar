@@ -12,14 +12,15 @@ from AAlergia import AALERGIA
 from export_to_prism import export_to_prism
 
 #those are the variables that need to be changed
-MODELNAME = 'channel_600_3_4_3_with_nb_clean'
+FOLDERNAME = 'channel_analysis_be_max_change_300'
+MODELNAME = 'channel_analysis_be_max_change_300_344'
 DELIMITER = ':'
 SYMBOL_COUNT = 640
 FLAG_TOKEN = 1
 FLAG_OUTPUT = 1
 
 #import data from file
-alphabets, trainingset = load_data(MODELNAME, DELIMITER)
+alphabets, trainingset = load_data(FOLDERNAME, MODELNAME, DELIMITER)
         
 #Model learning
 trainingset_np = array(trainingset)

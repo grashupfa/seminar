@@ -22,7 +22,7 @@ def export_to_prism(dffa):
         if valid[i] != mask[i] :
             g_edge[np.where(g_edge == valid[i])] = mask[i]; # careful -> 0 values are same as -1 values!
     
-    f = open('output','w');
+    f = open('output.prism','w');
     
     f.write('dtmc \n \n');
     
